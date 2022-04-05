@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 05-04-2022 a las 05:43:04
+-- Tiempo de generación: 05-04-2022 a las 20:55:16
 -- Versión del servidor: 10.4.22-MariaDB
 -- Versión de PHP: 8.1.1
 
@@ -54,8 +54,8 @@ CREATE TABLE `casos` (
   `argunmento_rechazo` varchar(300) NOT NULL,
   `descripcion_apertura` varchar(300) NOT NULL,
   `pdf_apertura` varchar(100) NOT NULL,
-  `fecha_apertura` varchar(100) NOT NULL,
-  `fecha_limite` varchar(100) NOT NULL
+  `fecha_apertura` date NOT NULL,
+  `fecha_limite` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -168,7 +168,7 @@ CREATE TABLE `usuarios` (
   `id_rol` int(11) NOT NULL,
   `nombre` varchar(200) NOT NULL,
   `identificacion` varchar(200) NOT NULL,
-  `fecha_nacimiento` varchar(200) NOT NULL,
+  `fecha_nacimiento` date NOT NULL,
   `sexo` varchar(200) NOT NULL,
   `correo` varchar(200) NOT NULL,
   `password` varchar(200) NOT NULL
