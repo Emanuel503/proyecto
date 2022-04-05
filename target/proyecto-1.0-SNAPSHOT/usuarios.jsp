@@ -1,7 +1,7 @@
 <%@ page import="jakarta.servlet.http.HttpSession" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ page import="proyecto.beans.DepartamentosBean" %>
-<jsp:useBean id="departamentolist" class="proyecto.beans.DepartamentosBean" scope="request"></jsp:useBean>
+<%@ page import="proyecto.beans.UsuariosBean" %>
+<jsp:useBean id="usuariolist" class="proyecto.beans.UsuariosBean" scope="request"></jsp:useBean>
 <%
     HttpSession session_actual = request.getSession(false);
     String id = (String) session_actual.getAttribute("id");
@@ -115,30 +115,42 @@
 </nav>
 <body>
 <div class="container">
-    <br><h1>Registro de departamentos</h1><br>
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal">Registrar departamento</button><br><br>
+    <br><h1>Registro de usuarios</h1><br>
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal">Registrar usuario</button><br><br>
     <table class="table table-striped table-hover table-bordered">
         <thead class="table-dark">
         <tr>
             <th>#</th>
-            <th>Codigo</th>
-            <th>Nombre departamento</th>
+            <th>Nombre completo</th>
+            <th>Identificacion</th>
+            <th>Fecha nacimiento</th>
+            <th>Sexo</th>
+            <th>Correo</th>
+            <th>Password</th>
+            <th>Rol de usuario</th>
+            <th>Departamento</th>
             <th>Opciones</th>
         </tr>
         </thead>
         <tbody>
         <%
             int contador=0;
-            for (DepartamentosBean departamento: departamentolist.obtenerDepartamentos()) {
+            for (UsuariosBean usuario: usuariolist.obtenerUsuarios()) {
                 contador++;
         %>
         <tr>
             <td><%= contador %></td>
-            <td><%= departamento.getCodigo() %></td>
-            <td><%= departamento.getNombre() %></td>
+            <td><%= usuario.getNombre() %></td>
+            <td><%= usuario.getIdentificacion() %></td>
+            <td><%= usuario.getFecha_nacimiento() %></td>
+            <td><%= usuario.getSexo() %></td>
+            <td><%= usuario.getCorreo() %></td>
+            <td><%= usuario.getPassword() %></td>
+            <td><%= usuario.getId_rol() %></td>
+            <td><%= usuario.getId_departamento() %></td>
             <td>
-                <a href="controllerDepartamento.jsp?id=<%= departamento.getId() %>" class="btn btn-success">Modificar</a>
-                <a href="controllerDepartamento.jsp?id=<%= departamento.getId() %>" class="btn btn-danger">Eliminar</a>
+                <a href="controllerUsuarios.jsp?id=<%= usuario.getId() %>" class="btn btn-success">Modificar</a>
+                <a onclick="eliminarUsuario" href="controllerUsuarios.jsp?id=<%= usuario.getId() %>" class="btn btn-danger">Eliminar</a>
             </td>
         </tr>
         <%}%>
@@ -152,30 +164,71 @@
                 <h5 class="modal-title" id="exampleModalLabel">Registar usuario</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form action="controllerDepartamentos.jsp" method="post">
+            <form action="controllerUsuarios.jsp" method="post">
                 <input hidden name="opcion" value="guardar">
                 <div class="modal-body">
-                    <div class="row g-5 align-items-center">
-                        <div class="col-3">
-                            <label for="codigo" class="col-form-label">Codigo del departamento: </label>
+                    <div class="row g-3 align-items-center">
+                        <div class="col-2">
+                            <label for="nombre" class="col-form-label">Nombre completo: </label>
                         </div>
-                        <div class="col-7">
-                            <input type="text" id="codigo" name="codigo" class="form-control" required>
+                        <div class="col-10">
+                            <input type="text" class="form-control" id="nombre" name="nombre" required>
                         </div>
-                    </div>
-                    <br>
-                    <div class="row g-5 align-items-center">
-                        <div class="col-3">
-                            <label for="nombre" class="col-form-label">Nombre del departamento: </label>
+
+                        <div class="col-2">
+                            <label for="identificacion" class="col-form-label">Identificacion: </label>
                         </div>
-                        <div class="col-7">
-                            <input type="text" id="nombre" name="nombre" class="form-control" required>
+                        <div class="col-10">
+                            <input type="text" class="form-control" id="identificacion" name="identificacion" required>
+                        </div>
+
+                        <div class="col-2">
+                            <label for="fecha_nacimiento" class="col-form-label">Fecha de nacimiento: </label>
+                        </div>
+                        <div class="col-10">
+                            <input type="date" class="form-control" id="fecha_nacimiento" name="fecha_nacimiento" required>
+                        </div>
+
+                        <div class="col-2">
+                            <label for="sexo" class="col-form-label">Sexo: </label>
+                        </div>
+                        <div class="col-10">
+                            <select class="form-select" name="sexo" id="sexo">
+                                <option>Masculino</option>
+                                <option>Femenino</option>
+                            </select>
+                        </div>
+
+                        <div class="col-2">
+                            <label for="correo" class="col-form-label">Correo: </label>
+                        </div>
+                        <div class="col-10">
+                            <input type="text" class="form-control" id="correo" name="correo" required>
+                        </div>
+
+                        <div class="col-2">
+                            <label for="password" class="col-form-label">Contraseña: </label>
+                        </div>
+                        <div class="col-10">
+                            <input type="text" class="form-control" id="password" name="password" required>
+                        </div>
+                        <div class="col-2">
+                            <label for="id_rol" class="col-form-label">Rol de usuario: </label>
+                        </div>
+                        <div class="col-10">
+                            <input type="text" class="form-control" id="id_rol" name="id_rol" required>
+                        </div>
+                        <div class="col-2">
+                            <label for="id_departamento" class="col-form-label">Departamento: </label>
+                        </div>
+                        <div class="col-10">
+                            <input type="text" class="form-control" id="id_departamento" name="id_departamento" required>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="submit" class="btn btn-primary">Guardar departamento</button>
+                    <button type="submit" class="btn btn-primary">Guardar usuario</button>
                 </div>
             </form>
         </div>
@@ -184,5 +237,6 @@
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js" integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="js/funciones.js"></script>
 </body>
 </html>

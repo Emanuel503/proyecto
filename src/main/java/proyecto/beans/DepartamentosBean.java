@@ -45,7 +45,7 @@ public class DepartamentosBean {
         this.nombre = nombre;
     }
 
-    public List<DepartamentosBean> mostrarDepartamentos(){
+    public List<DepartamentosBean> obtenerDepartamentos(){
         try {
             st = conexion.prepareStatement("SELECT * FROM departamentos");
             rs = st.executeQuery();
@@ -64,8 +64,23 @@ public class DepartamentosBean {
         }
     }
 
-    public List<DepartamentosBean> mostrarDepartamento(String id){
-
-        return null;
+    public List<DepartamentosBean> obtenerDepartamento(String id){
+        try {
+            st = conexion.prepareStatement("SELECT * FROM departamentos WHERE id=?");
+            st.setString(1,id);
+            rs = st.executeQuery();
+            List<DepartamentosBean> list = new ArrayList<>();
+            while (rs.next()){
+                DepartamentosBean departamento = new DepartamentosBean();
+                departamento.setId(rs.getInt("id"));
+                departamento.setCodigo(rs.getString("codigo"));
+                departamento.setNombre(rs.getString("nombre"));
+                list.add(departamento);
+            }
+            return list;
+        }catch (SQLException throwables) {
+            throwables.printStackTrace();
+            return null;
+        }
     }
 }

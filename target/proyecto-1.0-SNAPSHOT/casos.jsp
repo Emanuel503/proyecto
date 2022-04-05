@@ -1,7 +1,5 @@
 <%@ page import="jakarta.servlet.http.HttpSession" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ page import="proyecto.beans.DepartamentosBean" %>
-<jsp:useBean id="departamentolist" class="proyecto.beans.DepartamentosBean" scope="request"></jsp:useBean>
 <%
     HttpSession session_actual = request.getSession(false);
     String id = (String) session_actual.getAttribute("id");
@@ -115,74 +113,11 @@
 </nav>
 <body>
 <div class="container">
-    <br><h1>Registro de departamentos</h1><br>
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal">Registrar departamento</button><br><br>
-    <table class="table table-striped table-hover table-bordered">
-        <thead class="table-dark">
-        <tr>
-            <th>#</th>
-            <th>Codigo</th>
-            <th>Nombre departamento</th>
-            <th>Opciones</th>
-        </tr>
-        </thead>
-        <tbody>
-        <%
-            int contador=0;
-            for (DepartamentosBean departamento: departamentolist.obtenerDepartamentos()) {
-                contador++;
-        %>
-        <tr>
-            <td><%= contador %></td>
-            <td><%= departamento.getCodigo() %></td>
-            <td><%= departamento.getNombre() %></td>
-            <td>
-                <a href="controllerDepartamento.jsp?id=<%= departamento.getId() %>" class="btn btn-success">Modificar</a>
-                <a href="controllerDepartamento.jsp?id=<%= departamento.getId() %>" class="btn btn-danger">Eliminar</a>
-            </td>
-        </tr>
-        <%}%>
-        </tbody>
-    </table>
-</div>
-<div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Registar usuario</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <form action="controllerDepartamentos.jsp" method="post">
-                <input hidden name="opcion" value="guardar">
-                <div class="modal-body">
-                    <div class="row g-5 align-items-center">
-                        <div class="col-3">
-                            <label for="codigo" class="col-form-label">Codigo del departamento: </label>
-                        </div>
-                        <div class="col-7">
-                            <input type="text" id="codigo" name="codigo" class="form-control" required>
-                        </div>
-                    </div>
-                    <br>
-                    <div class="row g-5 align-items-center">
-                        <div class="col-3">
-                            <label for="nombre" class="col-form-label">Nombre del departamento: </label>
-                        </div>
-                        <div class="col-7">
-                            <input type="text" id="nombre" name="nombre" class="form-control" required>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="submit" class="btn btn-primary">Guardar departamento</button>
-                </div>
-            </form>
-        </div>
-    </div>
+    <br><h1>Registro de Casos</h1><br>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js" integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="js/funciones.js"></script>
 </body>
 </html>

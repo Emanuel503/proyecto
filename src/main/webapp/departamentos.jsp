@@ -129,7 +129,7 @@
         <tbody>
         <%
             int contador=0;
-            for (DepartamentosBean departamento: departamentolist.mostrarDepartamentos()) {
+            for (DepartamentosBean departamento: departamentolist.obtenerDepartamentos()) {
                 contador++;
         %>
         <tr>
@@ -186,4 +186,3 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </body>
 </html>
-
