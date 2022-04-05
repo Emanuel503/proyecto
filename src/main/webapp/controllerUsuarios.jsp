@@ -70,7 +70,7 @@
             st.setString(6, sexo);
             st.setString(7, correo);
             st.setString(8, password);
-            st.executeQuery();
+            st.executeUpdate();
             response.sendRedirect("usuarios.jsp?guardado");
             break;
         case "modificarUsuario":
@@ -83,7 +83,7 @@
             sexo = request.getParameter("sexo");;
             correo = request.getParameter("correo");;
             password = request.getParameter("password");;
-            st = conexion.prepareStatement("UPDATE usuarios SET(id_departamento=?, id_rol=?, nombre=?, identificacion=?, fecha_nacimiento=?, sexo=?, correo=?, password=?) WHERE=?");
+            st = conexion.prepareStatement("UPDATE usuarios SET(id_departamento=?, id_rol=?, nombre=?, identificacion=?, fecha_nacimiento=?, sexo=?, correo=?, password=?) WHERE id=?");
             st.setInt(1, id_departamento);
             st.setInt(2, id_rol);
             st.setString(3, nombre);
@@ -93,7 +93,7 @@
             st.setString(7, correo);
             st.setString(8, password);
             st.setInt(10, id);
-            st.executeQuery();
+            st.executeUpdate();
             response.sendRedirect("usuarios.jsp?modificado");
 
             break;
@@ -101,7 +101,7 @@
                 id = Integer.parseInt(request.getParameter("id"));
                 st = conexion.prepareStatement("DELETE FROM usuarios WHERE id=?");
                 st.setInt(1, id);
-                st.executeQuery();
+                st.executeUpdate();
                 response.sendRedirect("usuarios.jsp?eliminado");
             break;
     }
