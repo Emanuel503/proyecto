@@ -1,0 +1,16 @@
+.login{
+    margin-top: 100px;
+    background-color: #c3c3c3;
+    padding: 20px 50px;
+}
+
+.login > img{
+    padding: 10px;
+    display: block;
+    margin: auto;
+    width: 70%;
+}
+
+.nav-item{
+    margin-right: 15px;
+}
