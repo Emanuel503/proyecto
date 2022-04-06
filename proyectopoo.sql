@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 05-04-2022 a las 20:55:16
+-- Tiempo de generación: 07-04-2022 a las 01:31:22
 -- Versión del servidor: 10.4.22-MariaDB
 -- Versión de PHP: 8.1.1
 
@@ -45,7 +45,6 @@ CREATE TABLE `bitacora` (
 CREATE TABLE `casos` (
   `id` int(11) NOT NULL,
   `id_estado` int(11) NOT NULL,
-  `id_jefe` int(11) NOT NULL,
   `id_programador` int(11) NOT NULL,
   `id_tester` int(11) NOT NULL,
   `codigo` varchar(100) NOT NULL,
@@ -67,15 +66,19 @@ CREATE TABLE `casos` (
 CREATE TABLE `departamentos` (
   `id` int(11) NOT NULL,
   `codigo` varchar(50) NOT NULL,
-  `nombre` varchar(50) NOT NULL
+  `nombre` varchar(50) NOT NULL,
+  `descripcion` varchar(300) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Volcado de datos para la tabla `departamentos`
 --
 
-INSERT INTO `departamentos` (`id`, `codigo`, `nombre`) VALUES
-(1, '234234', 'Areas funcionales');
+INSERT INTO `departamentos` (`id`, `codigo`, `nombre`, `descripcion`) VALUES
+(1, 'DNF220405745', 'Areas funcionales', 'Area de funcionalidades de la empresa'),
+(12, 'QDY220405868', 'Area administrativa', 'Area administrativa contable'),
+(13, 'PVE220405752', 'Area de finanzas', 'Area de finanzas de la empresa'),
+(14, 'CLN220405748', 'Area de ventas', 'Area de ventas de la empresa');
 
 -- --------------------------------------------------------
 
@@ -104,25 +107,21 @@ INSERT INTO `estados_casos` (`id`, `estado`) VALUES
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `jefes`
---
-
-CREATE TABLE `jefes` (
-  `id` int(11) NOT NULL,
-  `id_usuario` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- --------------------------------------------------------
-
---
 -- Estructura de tabla para la tabla `programadores`
 --
 
 CREATE TABLE `programadores` (
   `id` int(11) NOT NULL,
-  `id_usuario` int(11) NOT NULL,
+  `id_programador` int(11) NOT NULL,
   `id_jefe` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Volcado de datos para la tabla `programadores`
+--
+
+INSERT INTO `programadores` (`id`, `id_programador`, `id_jefe`) VALUES
+(5, 7, 4);
 
 -- --------------------------------------------------------
 
@@ -142,19 +141,7 @@ CREATE TABLE `roles_usuarios` (
 INSERT INTO `roles_usuarios` (`id`, `rol`) VALUES
 (1, 'Administrador'),
 (2, 'Jefe'),
-(3, 'Programador'),
-(4, 'Tester');
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `testers`
---
-
-CREATE TABLE `testers` (
-  `id` int(11) NOT NULL,
-  `id_usuario` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+(3, 'Empleado');
 
 -- --------------------------------------------------------
 
@@ -179,7 +166,10 @@ CREATE TABLE `usuarios` (
 --
 
 INSERT INTO `usuarios` (`id`, `id_departamento`, `id_rol`, `nombre`, `identificacion`, `fecha_nacimiento`, `sexo`, `correo`, `password`) VALUES
-(2, 1, 1, 'Emanuel Jose Molina Zuniga', '5353446-5', '2001-09-17', 'Masculino', 'emanueljosemolina@gmail.com', 'admin');
+(3, 1, 1, 'Emanuel Jose Molina Zuniga', '23435433-4', '2001-09-17', 'Masculino', 'emanueljosemolina@gmail.com', 'admin'),
+(4, 1, 2, 'Andrea María López Carmen', '987654322', '2022-04-27', 'Femenino', 'andrea@gmail.com', 'andrea'),
+(7, 1, 3, 'Juan Carlos Canizales Peña', '23453645-5', '2022-04-11', 'Masculino', 'juan@gmail.com', 'juan'),
+(8, 1, 3, 'Enrique Antonio Huezo Gomez', '4534563-5', '2022-04-19', 'Masculino', 'enrique@gmail.com', 'enrique');
 
 --
 -- Índices para tablas volcadas
@@ -198,9 +188,8 @@ ALTER TABLE `bitacora`
 ALTER TABLE `casos`
   ADD PRIMARY KEY (`id`),
   ADD KEY `id_estado` (`id_estado`),
-  ADD KEY `id_jefe` (`id_jefe`),
   ADD KEY `id_programador` (`id_programador`),
-  ADD KEY `id_tester` (`id_tester`);
+  ADD KEY `casos_ibfk_4` (`id_tester`);
 
 --
 -- Indices de la tabla `departamentos`
@@ -215,32 +204,18 @@ ALTER TABLE `estados_casos`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indices de la tabla `jefes`
---
-ALTER TABLE `jefes`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `id_usuario` (`id_usuario`);
-
---
 -- Indices de la tabla `programadores`
 --
 ALTER TABLE `programadores`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `id_jefe` (`id_jefe`),
-  ADD KEY `id_usuario` (`id_usuario`);
+  ADD KEY `id_usuario` (`id_programador`),
+  ADD KEY `programadores_ibfk_1` (`id_jefe`);
 
 --
 -- Indices de la tabla `roles_usuarios`
 --
 ALTER TABLE `roles_usuarios`
   ADD PRIMARY KEY (`id`);
-
---
--- Indices de la tabla `testers`
---
-ALTER TABLE `testers`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `id_usuario` (`id_usuario`);
 
 --
 -- Indices de la tabla `usuarios`
@@ -270,7 +245,7 @@ ALTER TABLE `casos`
 -- AUTO_INCREMENT de la tabla `departamentos`
 --
 ALTER TABLE `departamentos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT de la tabla `estados_casos`
@@ -279,16 +254,10 @@ ALTER TABLE `estados_casos`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
--- AUTO_INCREMENT de la tabla `jefes`
---
-ALTER TABLE `jefes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
 -- AUTO_INCREMENT de la tabla `programadores`
 --
 ALTER TABLE `programadores`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT de la tabla `roles_usuarios`
@@ -297,16 +266,10 @@ ALTER TABLE `roles_usuarios`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
--- AUTO_INCREMENT de la tabla `testers`
---
-ALTER TABLE `testers`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- Restricciones para tablas volcadas
@@ -323,28 +286,15 @@ ALTER TABLE `bitacora`
 --
 ALTER TABLE `casos`
   ADD CONSTRAINT `casos_ibfk_1` FOREIGN KEY (`id_estado`) REFERENCES `estados_casos` (`id`),
-  ADD CONSTRAINT `casos_ibfk_2` FOREIGN KEY (`id_jefe`) REFERENCES `jefes` (`id`),
   ADD CONSTRAINT `casos_ibfk_3` FOREIGN KEY (`id_programador`) REFERENCES `programadores` (`id`),
-  ADD CONSTRAINT `casos_ibfk_4` FOREIGN KEY (`id_tester`) REFERENCES `testers` (`id`);
-
---
--- Filtros para la tabla `jefes`
---
-ALTER TABLE `jefes`
-  ADD CONSTRAINT `jefes_ibfk_1` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id`);
+  ADD CONSTRAINT `casos_ibfk_4` FOREIGN KEY (`id_tester`) REFERENCES `usuarios` (`id`);
 
 --
 -- Filtros para la tabla `programadores`
 --
 ALTER TABLE `programadores`
-  ADD CONSTRAINT `programadores_ibfk_1` FOREIGN KEY (`id_jefe`) REFERENCES `jefes` (`id`),
-  ADD CONSTRAINT `programadores_ibfk_2` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id`);
-
---
--- Filtros para la tabla `testers`
---
-ALTER TABLE `testers`
-  ADD CONSTRAINT `testers_ibfk_1` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id`);
+  ADD CONSTRAINT `programadores_ibfk_1` FOREIGN KEY (`id_jefe`) REFERENCES `usuarios` (`id`),
+  ADD CONSTRAINT `programadores_ibfk_2` FOREIGN KEY (`id_programador`) REFERENCES `usuarios` (`id`);
 
 --
 -- Filtros para la tabla `usuarios`
