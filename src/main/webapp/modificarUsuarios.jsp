@@ -1,5 +1,9 @@
 <%@ page import="jakarta.servlet.http.HttpSession" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ page import="proyecto.beans.UsuariosBean" %>
+<jsp:useBean id="usuariolist" class="proyecto.beans.UsuariosBean" scope="request"></jsp:useBean>
+<%@ page import="proyecto.beans.RolesBean" %>
+<jsp:useBean id="roleslist" class="proyecto.beans.RolesBean" scope="request"></jsp:useBean>
 <%@ page import="proyecto.beans.DepartamentosBean" %>
 <jsp:useBean id="departamentolist" class="proyecto.beans.DepartamentosBean" scope="request"></jsp:useBean>
 <%
@@ -101,73 +105,95 @@
 </nav>
 <body>
 <div class="container">
-    <br><h1>Registro de Departamentos</h1><br>
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal">Registrar departamento</button><br><br>
-    <table class="table table-striped table-hover table-bordered">
-        <thead class="table-dark">
-        <tr>
-            <th>#</th>
-            <th>Codigo</th>
-            <th>Nombre departamento</th>
-            <th>Descriopcion</th>
-            <th>Opciones</th>
-        </tr>
-        </thead>
-        <tbody>
-        <%
-            int contador=0;
-            for (DepartamentosBean departamento: departamentolist.obtenerDepartamentos()) {
-                contador++;
-        %>
-        <tr>
-            <td><%= contador %></td>
-            <td><%= departamento.getCodigo() %></td>
-            <td><%= departamento.getNombre() %></td>
-            <td><%= departamento.getDescripcion() %></td>
-            <td>
-                <a href="modificarDepartamento.jsp?id=<%= departamento.getId() %>" class="btn btn-success">Modificar</a>
-                <button onclick="eliminarDepartamento(<%= departamento.getId() %>)" class="btn btn-danger">Eliminar</button>
-            </td>
-        </tr>
-        <%}%>
-        </tbody>
-    </table>
-</div>
-<div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Registar departamentos</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    <br><h1>Modificar usuario</h1><br>
+    <%
+        for (UsuariosBean usuario: usuariolist.obtenerUsuario(Integer.parseInt(request.getParameter("id")))) {
+    %>
+    <form action="controllerUsuarios.jsp" method="post">
+        <input hidden name="opcion" value="modificarUsuario">
+        <input hidden name="id" value="<%= request.getParameter("id") %>">
+        <div class="row g-3 align-items-center">
+            <div class="col-2">
+                <label for="nombre" class="col-form-label">Nombre completo: </label>
             </div>
-            <form action="controllerDepartamentos.jsp" method="post">
-                <input hidden name="opcion" value="guardarDepartamento">
-                <div class="modal-body">
-                    <div class="row g-5 align-items-center">
-                        <div class="col-3">
-                            <label for="nombre" class="col-form-label">Nombre del departamento: </label>
-                        </div>
-                        <div class="col-7">
-                            <input type="text" id="nombre" name="nombre" class="form-control" required>
-                        </div>
-                    </div>
-                    <br>
-                    <div class="row g-5 align-items-center">
-                        <div class="col-3">
-                            <label for="descripcion" class="col-form-label">Descripcion: </label>
-                        </div>
-                        <div class="col-7">
-                            <input type="text" id="descripcion" name="descripcion" class="form-control" maxlength="300" required>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="submit" class="btn btn-primary">Guardar departamento</button>
-                </div>
-            </form>
-        </div>
-    </div>
+            <div class="col-10">
+                <input type="text" class="form-control" id="nombre" name="nombre" required value="<%= usuario.getNombre() %>">
+            </div>
+
+            <div class="col-2">
+                <label for="identificacion" class="col-form-label">Identificacion: </label>
+            </div>
+            <div class="col-10">
+                <input type="text" class="form-control" id="identificacion" name="identificacion" required value="<%= usuario.getIdentificacion() %>">
+            </div>
+
+            <div class="col-2">
+                <label for="fecha_nacimiento" class="col-form-label">Fecha de nacimiento: </label>
+            </div>
+            <div class="col-10">
+                <input type="date" class="form-control" id="fecha_nacimiento" name="fecha_nacimiento" required value="<%= usuario.getFecha_nacimiento() %>">
+            </div>
+
+            <div class="col-2">
+                <label for="sexo" class="col-form-label">Sexo: </label>
+            </div>
+            <div class="col-10">
+                <select class="form-select" name="sexo" id="sexo">
+                    <option <% if(usuario.getSexo().equals("Masculino")){ out.println("selected");}%>>Masculino</option>
+                    <option <% if(usuario.getSexo().equals("Femenino")){ out.println("selected");}%>>Femenino</option>
+                </select>
+            </div>
+
+            <div class="col-2">
+                <label for="correo" class="col-form-label">Correo: </label>
+            </div>
+            <div class="col-10">
+                <input type="email" class="form-control" id="correo" name="correo" required value="<%= usuario.getCorreo() %>">
+            </div>
+
+            <div class="col-2">
+                <label for="password" class="col-form-label">Contraseña: </label>
+            </div>
+            <div class="col-10">
+                <input type="text" class="form-control" id="password" name="password" required value="<%= usuario.getPassword() %>">
+            </div>
+
+            <div class="col-2">
+                <label for="id_rol" class="col-form-label">Rol de usuario: </label>
+            </div>
+            <div class="col-10">
+                <select class="form-select" id="id_rol" name="id_rol">
+                    <%
+                    for (RolesBean rol: roleslist.obtenerRoles()) {
+                        if (rol.getId() == usuario.getId_rol()){ %>
+                            <option selected value="<%= rol.getId()%>"><%= rol.getRol() %></option>
+                        <%}else{%>
+                            <option value="<%= rol.getId()%>"><%= rol.getRol() %></option>
+                        <%}
+                    }%>
+                </select>
+            </div>
+
+            <div class="col-2">
+                <label for="id_departamento" class="col-form-label">Departamento: </label>
+            </div>
+            <div class="col-10">
+                <select class="form-select" id="id_departamento" name="id_departamento">
+                    <%
+                    for (DepartamentosBean departamento: departamentolist.obtenerDepartamentos()) {
+                        if (departamento.getId() == usuario.getId_departamento()){ %>
+                            <option selected value="<%= departamento.getId()%>"><%= departamento.getNombre() %></option>
+                        <%}else{%>
+                            <option value="<%= departamento.getId()%>"><%= departamento.getNombre() %></option>
+                        <%}
+                    }%>
+                </select>
+            </div>
+        </div><br><br>
+        <a href="usuarios.jsp" class="btn btn-secondary" >Cancelar</a>
+        <button type="submit" class="btn btn-success">Modificar usuario</button>
+    </form>
+    <%}%>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js" integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>
@@ -175,56 +201,3 @@
 <script src="js/funciones.js"></script>
 </body>
 </html>
-<%
-    if (request.getParameter("guardado") != null){
-        out.println("<div class=\"alert alert-success alert-dismissible fade show fixed-top text-center\" role=\"alert\">\n" +
-                "       <svg xmlns=\"http://www.w3.org/2000/svg\" style=\"display: none;\">\n" +
-                "          <symbol id=\"check-circle-fill\" fill=\"currentColor\" viewBox=\"0 0 16 16\">\n" +
-                "              <path d=\"M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z\"/>\n" +
-                "           </symbol>\n" +
-                "        </svg>\n" +
-                "        <svg class=\"bi flex-shrink-0 me-2\" width=\"24\" height=\"24\" role=\"img\" aria-label=\"Success:\"><use xlink:href=\"#check-circle-fill\"/></svg>\n" +
-                "         <b>Departamento registrado correctamente</b>\n" +
-                "         <button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"alert\" aria-label=\"Close\"></button>\n" +
-                "     </div>");
-    }
-
-    if (request.getParameter("eliminado") != null){
-        out.println("<div class=\"alert alert-warning alert-dismissible fade show fixed-top text-center\" role=\"alert\">\n" +
-                "       <svg xmlns=\"http://www.w3.org/2000/svg\" style=\"display: none;\">\n" +
-                "          <symbol id=\"check-circle-fill\" fill=\"currentColor\" viewBox=\"0 0 16 16\">\n" +
-                "              <path d=\"M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z\"/>\n" +
-                "           </symbol>\n" +
-                "        </svg>\n" +
-                "        <svg class=\"bi flex-shrink-0 me-2\" width=\"24\" height=\"24\" role=\"img\" aria-label=\"Success:\"><use xlink:href=\"#check-circle-fill\"/></svg>\n" +
-                "         <b>Departamento eliminado correctamente</b>\n" +
-                "         <button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"alert\" aria-label=\"Close\"></button>\n" +
-                "     </div>");
-    }
-
-    if (request.getParameter("modificado") != null){
-        out.println("<div class=\"alert alert-success alert-dismissible fade show fixed-top text-center\" role=\"alert\">\n" +
-                "       <svg xmlns=\"http://www.w3.org/2000/svg\" style=\"display: none;\">\n" +
-                "          <symbol id=\"check-circle-fill\" fill=\"currentColor\" viewBox=\"0 0 16 16\">\n" +
-                "              <path d=\"M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z\"/>\n" +
-                "           </symbol>\n" +
-                "        </svg>\n" +
-                "        <svg class=\"bi flex-shrink-0 me-2\" width=\"24\" height=\"24\" role=\"img\" aria-label=\"Success:\"><use xlink:href=\"#check-circle-fill\"/></svg>\n" +
-                "         <b>Departamento registrado correctamente</b>\n" +
-                "         <button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"alert\" aria-label=\"Close\"></button>\n" +
-                "     </div>");
-    }
-
-    if (request.getParameter("error") != null){
-        out.println("<div class=\"alert alert-danger alert-dismissible fade show fixed-top text-center\" role=\"alert\">\n" +
-                "       <svg xmlns=\"http://www.w3.org/2000/svg\" style=\"display: none;\">\n" +
-                "           <symbol id=\"exclamation-triangle-fill\" fill=\"currentColor\" viewBox=\"0 0 16 16\">\n" +
-                "               <path d=\"M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z\"/>\n" +
-                "            </symbol>\n" +
-                "        </svg>\n" +
-                "        <svg class=\"bi flex-shrink-0 me-2\" width=\"24\" height=\"24\" role=\"img\" aria-label=\"Warning:\"><use xlink:href=\"#exclamation-triangle-fill\"/></svg>\n" +
-                "         <b>No puedes eliminar este deparamento ya que contiene usuarios registrados</b>\n" +
-                "         <button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"alert\" aria-label=\"Close\"></button>\n" +
-                "     </div>");
-    }
-%>

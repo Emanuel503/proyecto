@@ -11,6 +11,7 @@ public class DepartamentosBean {
     private int id;
     private String codigo;
     private String nombre;
+    private String Descripcion;
 
     public DepartamentosBean(){
         try{
@@ -45,6 +46,14 @@ public class DepartamentosBean {
         this.nombre = nombre;
     }
 
+    public String getDescripcion() {
+        return Descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        Descripcion = descripcion;
+    }
+
     public List<DepartamentosBean> obtenerDepartamentos(){
         try {
             st = conexion.prepareStatement("SELECT * FROM departamentos");
@@ -55,6 +64,7 @@ public class DepartamentosBean {
                 departamento.setId(rs.getInt("id"));
                 departamento.setCodigo(rs.getString("codigo"));
                 departamento.setNombre(rs.getString("nombre"));
+                departamento.setDescripcion(rs.getString("descripcion"));
                 list.add(departamento);
             }
             return list;
@@ -75,6 +85,7 @@ public class DepartamentosBean {
                 departamento.setId(rs.getInt("id"));
                 departamento.setCodigo(rs.getString("codigo"));
                 departamento.setNombre(rs.getString("nombre"));
+                departamento.setDescripcion(rs.getString("descripcion"));
                 list.add(departamento);
             }
             return list;

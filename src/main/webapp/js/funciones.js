@@ -5,6 +5,13 @@ window.setTimeout(function(){
     })
 }, 1500);
 
+function eliminarProgramador(id){
+    let opcion = confirm("¿Estas seguro que quieres elimianar este programador?");
+    if (opcion){
+        location.href = "controllerUsuariosProgramadores.jsp?id="+id+"&opcion=eliminarProgramador";
+    }
+}
+
 function eliminarUsuario(id){
     let opcion = confirm("¿Estas seguro que quieres elimianar este usuario?");
     if (opcion){

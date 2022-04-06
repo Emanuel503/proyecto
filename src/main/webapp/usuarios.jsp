@@ -2,6 +2,10 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ page import="proyecto.beans.UsuariosBean" %>
 <jsp:useBean id="usuariolist" class="proyecto.beans.UsuariosBean" scope="request"></jsp:useBean>
+<%@ page import="proyecto.beans.RolesBean" %>
+<jsp:useBean id="roleslist" class="proyecto.beans.RolesBean" scope="request"></jsp:useBean>
+<%@ page import="proyecto.beans.DepartamentosBean" %>
+<jsp:useBean id="departamentolist" class="proyecto.beans.DepartamentosBean" scope="request"></jsp:useBean>
 <%
     HttpSession session_actual = request.getSession(false);
     String id = (String) session_actual.getAttribute("id");
@@ -65,26 +69,12 @@
                             <i class="bi bi-person"></i>
                             Registro de usuarios
                         </a>
-                        <a class="dropdown-item d-flex gap-2 align-items-center" href="jefes.jsp">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person" viewBox="0 0 16 16">
-                                <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10z"/>
-                            </svg>
-                            <i class="bi bi-person"></i>
-                            Registro de jefes
-                        </a>
-                        <a class="dropdown-item d-flex gap-2 align-items-center" href="programadores.jsp">
+                        <a class="dropdown-item d-flex gap-2 align-items-center" href="usuariosProgramadores.jsp">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person" viewBox="0 0 16 16">
                                 <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10z"/>
                             </svg>
                             <i class="bi bi-person"></i>
                             Registro de programadores
-                        </a>
-                        <a class="dropdown-item d-flex gap-2 align-items-center" href="testers.jsp">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person" viewBox="0 0 16 16">
-                                <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10z"/>
-                            </svg>
-                            <i class="bi bi-person"></i>
-                            Registro de testers
                         </a>
                     </ul>
                 </li>
@@ -146,10 +136,10 @@
             <td><%= usuario.getSexo() %></td>
             <td><%= usuario.getCorreo() %></td>
             <td><%= usuario.getPassword() %></td>
-            <td><%= usuario.getId_rol() %></td>
-            <td><%= usuario.getId_departamento() %></td>
+            <td><%= usuario.getRol() %></td>
+            <td><%= usuario.getDepartamento() %></td>
             <td>
-                <a href="modificarUsuario.jsp?id=<%= usuario.getId() %>" class="btn btn-success">Modificar</a>
+                <a href="modificarUsuarios.jsp?id=<%= usuario.getId() %>" class="btn btn-success">Modificar</a>
                 <button onclick="eliminarUsuario(<%= usuario.getId() %>)" class="btn btn-danger">Eliminar</button>
             </td>
         </tr>
@@ -165,7 +155,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form action="controllerUsuarios.jsp" method="post">
-                <input hidden name="opcion" value="guardar">
+                <input hidden name="opcion" value="guardarUsuario">
                 <div class="modal-body">
                     <div class="row g-3 align-items-center">
                         <div class="col-2">
@@ -203,7 +193,7 @@
                             <label for="correo" class="col-form-label">Correo: </label>
                         </div>
                         <div class="col-10">
-                            <input type="text" class="form-control" id="correo" name="correo" required>
+                            <input type="email" class="form-control" id="correo" name="correo" required>
                         </div>
 
                         <div class="col-2">
@@ -212,17 +202,29 @@
                         <div class="col-10">
                             <input type="text" class="form-control" id="password" name="password" required>
                         </div>
+
                         <div class="col-2">
                             <label for="id_rol" class="col-form-label">Rol de usuario: </label>
                         </div>
                         <div class="col-10">
-                            <input type="text" class="form-control" id="id_rol" name="id_rol" required>
+                            <select class="form-select" id="id_rol" name="id_rol">
+                                <%
+                                for (RolesBean rol: roleslist.obtenerRoles()) {%>
+                                    <option value="<%= rol.getId()%>"><%= rol.getRol() %></option>
+                                <%}%>
+                            </select>
                         </div>
+
                         <div class="col-2">
                             <label for="id_departamento" class="col-form-label">Departamento: </label>
                         </div>
                         <div class="col-10">
-                            <input type="text" class="form-control" id="id_departamento" name="id_departamento" required>
+                            <select class="form-select" id="id_departamento" name="id_departamento">
+                                <%
+                                for (DepartamentosBean departamento: departamentolist.obtenerDepartamentos()) {%>
+                                    <option value="<%= departamento.getId()%>"><%= departamento.getNombre() %></option>
+                                <%}%>
+                            </select>
                         </div>
                     </div>
                 </div>
@@ -257,11 +259,11 @@
     if (request.getParameter("eliminado") != null){
         out.println("<div class=\"alert alert-warning alert-dismissible fade show fixed-top text-center\" role=\"alert\">\n" +
                 "       <svg xmlns=\"http://www.w3.org/2000/svg\" style=\"display: none;\">\n" +
-                "           <symbol id=\"exclamation-triangle-fill\" fill=\"currentColor\" viewBox=\"0 0 16 16\">\n" +
-                "               <path d=\"M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z\"/>\n" +
-                "            </symbol>\n" +
+                "          <symbol id=\"check-circle-fill\" fill=\"currentColor\" viewBox=\"0 0 16 16\">\n" +
+                "              <path d=\"M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z\"/>\n" +
+                "           </symbol>\n" +
                 "        </svg>\n" +
-                "        <svg class=\"bi flex-shrink-0 me-2\" width=\"24\" height=\"24\" role=\"img\" aria-label=\"Warning:\"><use xlink:href=\"#exclamation-triangle-fill\"/></svg>\n" +
+                "        <svg class=\"bi flex-shrink-0 me-2\" width=\"24\" height=\"24\" role=\"img\" aria-label=\"Success:\"><use xlink:href=\"#check-circle-fill\"/></svg>\n" +
                 "         <b>Usuario eliminado correctamente</b>\n" +
                 "         <button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"alert\" aria-label=\"Close\"></button>\n" +
                 "     </div>");
@@ -276,6 +278,19 @@
                 "        </svg>\n" +
                 "        <svg class=\"bi flex-shrink-0 me-2\" width=\"24\" height=\"24\" role=\"img\" aria-label=\"Success:\"><use xlink:href=\"#check-circle-fill\"/></svg>\n" +
                 "         <b>Usuario modificado correctamente</b>\n" +
+                "         <button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"alert\" aria-label=\"Close\"></button>\n" +
+                "     </div>");
+    }
+
+    if (request.getParameter("error") != null){
+        out.println("<div class=\"alert alert-danger alert-dismissible fade show fixed-top text-center\" role=\"alert\">\n" +
+                "       <svg xmlns=\"http://www.w3.org/2000/svg\" style=\"display: none;\">\n" +
+                "          <symbol id=\"check-circle-fill\" fill=\"currentColor\" viewBox=\"0 0 16 16\">\n" +
+                "              <path d=\"M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z\"/>\n" +
+                "           </symbol>\n" +
+                "        </svg>\n" +
+                "        <svg class=\"bi flex-shrink-0 me-2\" width=\"24\" height=\"24\" role=\"img\" aria-label=\"Success:\"><use xlink:href=\"#check-circle-fill\"/></svg>\n" +
+                "         <b>No se puede eliminar este usuario por ya tiene otros registros</b>\n" +
                 "         <button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"alert\" aria-label=\"Close\"></button>\n" +
                 "     </div>");
     }
