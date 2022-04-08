@@ -10,7 +10,9 @@ public class UsuariosProgramadoresBeans {
     PreparedStatement st = null;
     private int id;
     private int id_programador;
-    private String nombre_pogramador;
+    private String identificacion;
+    private String correo;
+    private String nombre_programador;
     private int id_jefe;
     private String nombre_jefe;
 
@@ -39,12 +41,28 @@ public class UsuariosProgramadoresBeans {
         this.id_programador = id_programador;
     }
 
-    public String getNombre_pogramador() {
-        return nombre_pogramador;
+    public String getIdentificacion() {
+        return identificacion;
     }
 
-    public void setNombre_pogramador(String nombre_pogramador) {
-        this.nombre_pogramador = nombre_pogramador;
+    public void setIdentificacion(String identificacion) {
+        this.identificacion = identificacion;
+    }
+
+    public String getCorreo() {
+        return correo;
+    }
+
+    public void setCorreo(String correo) {
+        this.correo = correo;
+    }
+
+    public String getNombre_programador() {
+        return nombre_programador;
+    }
+
+    public void setNombre_programador(String nombre_programador) {
+        this.nombre_programador = nombre_programador;
     }
 
     public int getId_jefe() {
@@ -72,9 +90,31 @@ public class UsuariosProgramadoresBeans {
                 UsuariosProgramadoresBeans usuariosProgramadores = new UsuariosProgramadoresBeans();
                 usuariosProgramadores.setId(rs.getInt(1));
                 usuariosProgramadores.setId_programador(rs.getInt(2));
-                usuariosProgramadores.setNombre_pogramador(rs.getString(3));
+                usuariosProgramadores.setNombre_programador(rs.getString(3));
                 usuariosProgramadores.setId_jefe(rs.getInt(4));
                 usuariosProgramadores.setNombre_jefe(rs.getString(5));
+                list.add(usuariosProgramadores);
+            }
+            return list;
+        }catch (SQLException throwables) {
+            throwables.printStackTrace();
+            return null;
+        }
+    }
+
+    public List<UsuariosProgramadoresBeans> obtenerUsuariosProgramadoresJefe(String id_jefe){
+        try {
+            st = conexion.prepareStatement("SELECT P.id,P.id_programador, U.nombre, U.identificacion, U.correo FROM programadores P JOIN usuarios U ON P.id_programador = U.id JOIN usuarios J ON P.id_jefe = J.id WHERE id_jefe = ?");
+            st.setString(1,id_jefe);
+            rs = st.executeQuery();
+            List<UsuariosProgramadoresBeans> list = new ArrayList<>();
+            while (rs.next()){
+                UsuariosProgramadoresBeans usuariosProgramadores = new UsuariosProgramadoresBeans();
+                usuariosProgramadores.setId(rs.getInt(1));
+                usuariosProgramadores.setId_programador(rs.getInt(2));
+                usuariosProgramadores.setNombre_programador(rs.getString(3));
+                usuariosProgramadores.setIdentificacion(rs.getString(4));
+                usuariosProgramadores.setCorreo(rs.getString(5));
                 list.add(usuariosProgramadores);
             }
             return list;

@@ -1,17 +1,11 @@
 <%@ page import="jakarta.servlet.http.HttpSession" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ page import="proyecto.beans.UsuariosBean" %>
-<jsp:useBean id="usuariolist" class="proyecto.beans.UsuariosBean" scope="request"></jsp:useBean>
-<%@ page import="proyecto.beans.RolesBean" %>
-<jsp:useBean id="roleslist" class="proyecto.beans.RolesBean" scope="request"></jsp:useBean>
-<%@ page import="proyecto.beans.DepartamentosBean" %>
-<jsp:useBean id="departamentolist" class="proyecto.beans.DepartamentosBean" scope="request"></jsp:useBean>
 <%
     HttpSession session_actual = request.getSession(false);
     String id = (String) session_actual.getAttribute("id");
     if (id == null) {
         response.sendRedirect("index.jsp");
-    }
+    }else{
 %>
 <!DOCTYPE html>
 <html lang="es">
@@ -23,7 +17,6 @@
     <link href="css/estilos.css" rel="stylesheet">
     <title>Sistema de proyectos</title>
 </head>
-
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark" aria-label="Tenth navbar example">
     <div class="container-fluid">
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample08" aria-controls="navbarsExample08" aria-expanded="false" aria-label="Toggle navigation">
@@ -50,6 +43,9 @@
                         <i class="bi bi-calendar3-fill"></i>
                     </a>
                 </li>
+                <%
+                    if (session_actual.getAttribute("id_rol").equals("1")){
+                %>
                 <li class="nav-item">
                     <a class="nav-link" href="departamentos.jsp">
                         Departamentos
@@ -59,6 +55,10 @@
                         <i class="bi bi-collection"></i>
                     </a>
                 </li>
+                <% } %>
+                <%
+                    if (session_actual.getAttribute("id_rol").equals("1") || session_actual.getAttribute("id_rol").equals("2") || session_actual.getAttribute("id_rol").equals("3")){
+                %>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="dropdown08" data-bs-toggle="dropdown" aria-expanded="false">Usuario</a>
                     <ul class="dropdown-menu dropdown-menu-dark mx-0 border-0 shadow" aria-labelledby="dropdown08">
@@ -69,6 +69,9 @@
                             <i class="bi bi-person"></i>
                             Registro de usuarios
                         </a>
+                        <%
+                            if (session_actual.getAttribute("id_rol").equals("1")){
+                        %>
                         <a class="dropdown-item d-flex gap-2 align-items-center" href="usuariosProgramadores.jsp">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person" viewBox="0 0 16 16">
                                 <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10z"/>
@@ -76,10 +79,12 @@
                             <i class="bi bi-person"></i>
                             Registro de programadores
                         </a>
+                        <% } %>
                     </ul>
                 </li>
+                <% } %>
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="dropdown0" data-bs-toggle="dropdown" aria-expanded="false">Cuenta</a>
+                    <a class="nav-link dropdown-toggle" href="#" id="dropdown0" data-bs-toggle="dropdown" aria-expanded="false">Cuenta <% out.print(session_actual.getAttribute("rol").toString()); %></a>
                     <ul class="dropdown-menu dropdown-menu-dark mx-0 border-0 shadow" aria-labelledby="dropdown0">
                         <a class="dropdown-item d-flex gap-2 align-items-center" href="informacion.jsp">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle" viewBox="0 0 16 16">
@@ -106,136 +111,19 @@
 <body>
 <div class="container">
     <br><h1>Registro de usuarios</h1><br>
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal">Registrar usuario</button><br><br>
-    <table class="table table-striped table-hover table-bordered">
-        <thead class="table-dark">
-        <tr>
-            <th>#</th>
-            <th>Nombre completo</th>
-            <th>Identificacion</th>
-            <th>Fecha nacimiento</th>
-            <th>Sexo</th>
-            <th>Correo</th>
-            <th>Password</th>
-            <th>Rol de usuario</th>
-            <th>Departamento</th>
-            <th>Opciones</th>
-        </tr>
-        </thead>
-        <tbody>
-        <%
-            int contador=0;
-            for (UsuariosBean usuario: usuariolist.obtenerUsuarios()) {
-                contador++;
-        %>
-        <tr>
-            <td><%= contador %></td>
-            <td><%= usuario.getNombre() %></td>
-            <td><%= usuario.getIdentificacion() %></td>
-            <td><%= usuario.getFecha_nacimiento() %></td>
-            <td><%= usuario.getSexo() %></td>
-            <td><%= usuario.getCorreo() %></td>
-            <td><%= usuario.getPassword() %></td>
-            <td><%= usuario.getRol() %></td>
-            <td><%= usuario.getDepartamento() %></td>
-            <td>
-                <a href="modificarUsuarios.jsp?id=<%= usuario.getId() %>" class="btn btn-success">Modificar</a>
-                <button onclick="eliminarUsuario(<%= usuario.getId() %>)" class="btn btn-danger">Eliminar</button>
-            </td>
-        </tr>
-        <%}%>
-        </tbody>
-    </table>
-</div>
-<div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Registar usuario</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <form action="controllerUsuarios.jsp" method="post">
-                <input hidden name="opcion" value="guardarUsuario">
-                <div class="modal-body">
-                    <div class="row g-3 align-items-center">
-                        <div class="col-2">
-                            <label for="nombre" class="col-form-label">Nombre completo: </label>
-                        </div>
-                        <div class="col-10">
-                            <input type="text" class="form-control" id="nombre" name="nombre" required>
-                        </div>
+<%
+    if(session_actual.getAttribute("id_rol").equals("1")){
+        %><jsp:include page="usuariosAdmin.jsp"/><%
+    }
 
-                        <div class="col-2">
-                            <label for="identificacion" class="col-form-label">Identificacion: </label>
-                        </div>
-                        <div class="col-10">
-                            <input type="text" class="form-control" id="identificacion" name="identificacion" required>
-                        </div>
+    if (session_actual.getAttribute("id_rol").equals("2")){
+        %><jsp:include page="usuariosJefeArea.jsp"/><%
+    }
 
-                        <div class="col-2">
-                            <label for="fecha_nacimiento" class="col-form-label">Fecha de nacimiento: </label>
-                        </div>
-                        <div class="col-10">
-                            <input type="date" class="form-control" id="fecha_nacimiento" name="fecha_nacimiento" required>
-                        </div>
-
-                        <div class="col-2">
-                            <label for="sexo" class="col-form-label">Sexo: </label>
-                        </div>
-                        <div class="col-10">
-                            <select class="form-select" name="sexo" id="sexo">
-                                <option>Masculino</option>
-                                <option>Femenino</option>
-                            </select>
-                        </div>
-
-                        <div class="col-2">
-                            <label for="correo" class="col-form-label">Correo: </label>
-                        </div>
-                        <div class="col-10">
-                            <input type="email" class="form-control" id="correo" name="correo" required>
-                        </div>
-
-                        <div class="col-2">
-                            <label for="password" class="col-form-label">Contraseña: </label>
-                        </div>
-                        <div class="col-10">
-                            <input type="text" class="form-control" id="password" name="password" required>
-                        </div>
-
-                        <div class="col-2">
-                            <label for="id_rol" class="col-form-label">Rol de usuario: </label>
-                        </div>
-                        <div class="col-10">
-                            <select class="form-select" id="id_rol" name="id_rol">
-                                <%
-                                for (RolesBean rol: roleslist.obtenerRoles()) {%>
-                                    <option value="<%= rol.getId()%>"><%= rol.getRol() %></option>
-                                <%}%>
-                            </select>
-                        </div>
-
-                        <div class="col-2">
-                            <label for="id_departamento" class="col-form-label">Departamento: </label>
-                        </div>
-                        <div class="col-10">
-                            <select class="form-select" id="id_departamento" name="id_departamento">
-                                <%
-                                for (DepartamentosBean departamento: departamentolist.obtenerDepartamentos()) {%>
-                                    <option value="<%= departamento.getId()%>"><%= departamento.getNombre() %></option>
-                                <%}%>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="submit" class="btn btn-primary">Guardar usuario</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
+    if (session_actual.getAttribute("id_rol").equals("3")){
+        %><jsp:include page="usuariosJefeDesarrollo.jsp"/><%
+    }
+%>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js" integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -294,4 +182,5 @@
                 "         <button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"alert\" aria-label=\"Close\"></button>\n" +
                 "     </div>");
     }
+}
 %>

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 07-04-2022 a las 01:31:22
+-- Tiempo de generación: 08-04-2022 a las 07:00:40
 -- Versión del servidor: 10.4.22-MariaDB
 -- Versión de PHP: 8.1.1
 
@@ -32,8 +32,7 @@ USE `proyectopoo`;
 CREATE TABLE `bitacora` (
   `id` int(11) NOT NULL,
   `id_caso` int(11) NOT NULL,
-  `cambios` varchar(300) NOT NULL,
-  `porcentaje` varchar(100) NOT NULL
+  `cambios` varchar(300) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -50,11 +49,12 @@ CREATE TABLE `casos` (
   `codigo` varchar(100) NOT NULL,
   `descripcion_requerimiento` varchar(300) NOT NULL,
   `pdf_requerimiento` varchar(200) DEFAULT NULL,
-  `argunmento_rechazo` varchar(300) NOT NULL,
+  `argumento_rechazo` varchar(300) NOT NULL,
   `descripcion_apertura` varchar(300) NOT NULL,
   `pdf_apertura` varchar(100) NOT NULL,
   `fecha_apertura` date NOT NULL,
-  `fecha_limite` date NOT NULL
+  `fecha_limite` date NOT NULL,
+  `porcentaje` varchar(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -75,10 +75,9 @@ CREATE TABLE `departamentos` (
 --
 
 INSERT INTO `departamentos` (`id`, `codigo`, `nombre`, `descripcion`) VALUES
-(1, 'DNF220405745', 'Areas funcionales', 'Area de funcionalidades de la empresa'),
-(12, 'QDY220405868', 'Area administrativa', 'Area administrativa contable'),
-(13, 'PVE220405752', 'Area de finanzas', 'Area de finanzas de la empresa'),
-(14, 'CLN220405748', 'Area de ventas', 'Area de ventas de la empresa');
+(1, 'DNF220405745', 'Areas de  funcionalidad', 'Departamento de funcionalidades de la empresa'),
+(13, 'PVE220405752', 'Area de \nfacturación fija', 'Departamento de \nfacturación fija'),
+(14, 'CLN220405748', 'Area de facturación Móvil', 'Departamento de facturación Móvil');
 
 -- --------------------------------------------------------
 
@@ -121,7 +120,7 @@ CREATE TABLE `programadores` (
 --
 
 INSERT INTO `programadores` (`id`, `id_programador`, `id_jefe`) VALUES
-(5, 7, 4);
+(8, 8, 7);
 
 -- --------------------------------------------------------
 
@@ -140,8 +139,10 @@ CREATE TABLE `roles_usuarios` (
 
 INSERT INTO `roles_usuarios` (`id`, `rol`) VALUES
 (1, 'Administrador'),
-(2, 'Jefe'),
-(3, 'Empleado');
+(2, 'Jefe de area'),
+(3, 'Jefe de desarrollo'),
+(5, 'Programador'),
+(6, 'Tester');
 
 -- --------------------------------------------------------
 
@@ -151,7 +152,7 @@ INSERT INTO `roles_usuarios` (`id`, `rol`) VALUES
 
 CREATE TABLE `usuarios` (
   `id` int(11) NOT NULL,
-  `id_departamento` int(11) NOT NULL,
+  `id_departamento` int(11) DEFAULT NULL,
   `id_rol` int(11) NOT NULL,
   `nombre` varchar(200) NOT NULL,
   `identificacion` varchar(200) NOT NULL,
@@ -169,7 +170,10 @@ INSERT INTO `usuarios` (`id`, `id_departamento`, `id_rol`, `nombre`, `identifica
 (3, 1, 1, 'Emanuel Jose Molina Zuniga', '23435433-4', '2001-09-17', 'Masculino', 'emanueljosemolina@gmail.com', 'admin'),
 (4, 1, 2, 'Andrea María López Carmen', '987654322', '2022-04-27', 'Femenino', 'andrea@gmail.com', 'andrea'),
 (7, 1, 3, 'Juan Carlos Canizales Peña', '23453645-5', '2022-04-11', 'Masculino', 'juan@gmail.com', 'juan'),
-(8, 1, 3, 'Enrique Antonio Huezo Gomez', '4534563-5', '2022-04-19', 'Masculino', 'enrique@gmail.com', 'enrique');
+(8, 1, 5, 'Enrique Antonio Huezo Gomez', '4534563-5', '2022-04-19', 'Masculino', 'enrique@gmail.com', 'enrique'),
+(10, 1, 5, 'Maria Jose Ayala Quintanilla', '34534532-5', '2022-03-28', 'Femenino', 'maria@gmail.com', 'maria'),
+(11, 1, 6, 'Nelson Antonio Navarro Ayala', '3453645-7', '2022-03-31', 'Masculino', 'nelson@gmail.com', 'nelson'),
+(12, 13, 2, 'Daniela Maria Peña Torres', '23423443-2', '2022-04-19', 'Femenino', 'torres@gmail.com', 'torres');
 
 --
 -- Índices para tablas volcadas
@@ -257,19 +261,19 @@ ALTER TABLE `estados_casos`
 -- AUTO_INCREMENT de la tabla `programadores`
 --
 ALTER TABLE `programadores`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT de la tabla `roles_usuarios`
 --
 ALTER TABLE `roles_usuarios`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- Restricciones para tablas volcadas

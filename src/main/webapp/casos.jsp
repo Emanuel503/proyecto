@@ -5,7 +5,7 @@
     String id = (String) session_actual.getAttribute("id");
     if (id == null) {
         response.sendRedirect("index.jsp");
-    }
+    }else{
 %>
 <!DOCTYPE html>
 <html lang="es">
@@ -17,7 +17,6 @@
     <link href="css/estilos.css" rel="stylesheet">
     <title>Sistema de proyectos</title>
 </head>
-
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark" aria-label="Tenth navbar example">
     <div class="container-fluid">
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample08" aria-controls="navbarsExample08" aria-expanded="false" aria-label="Toggle navigation">
@@ -44,6 +43,9 @@
                         <i class="bi bi-calendar3-fill"></i>
                     </a>
                 </li>
+                <%
+                    if (session_actual.getAttribute("id_rol").equals("1")){
+                %>
                 <li class="nav-item">
                     <a class="nav-link" href="departamentos.jsp">
                         Departamentos
@@ -53,6 +55,10 @@
                         <i class="bi bi-collection"></i>
                     </a>
                 </li>
+                <% } %>
+                <%
+                    if (session_actual.getAttribute("id_rol").equals("1") || session_actual.getAttribute("id_rol").equals("2") || session_actual.getAttribute("id_rol").equals("3")){
+                %>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="dropdown08" data-bs-toggle="dropdown" aria-expanded="false">Usuario</a>
                     <ul class="dropdown-menu dropdown-menu-dark mx-0 border-0 shadow" aria-labelledby="dropdown08">
@@ -63,6 +69,9 @@
                             <i class="bi bi-person"></i>
                             Registro de usuarios
                         </a>
+                        <%
+                            if (session_actual.getAttribute("id_rol").equals("1")){
+                        %>
                         <a class="dropdown-item d-flex gap-2 align-items-center" href="usuariosProgramadores.jsp">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person" viewBox="0 0 16 16">
                                 <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10z"/>
@@ -70,10 +79,12 @@
                             <i class="bi bi-person"></i>
                             Registro de programadores
                         </a>
+                        <% } %>
                     </ul>
                 </li>
+                <% } %>
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="dropdown0" data-bs-toggle="dropdown" aria-expanded="false">Cuenta</a>
+                    <a class="nav-link dropdown-toggle" href="#" id="dropdown0" data-bs-toggle="dropdown" aria-expanded="false">Cuenta <% out.print(session_actual.getAttribute("rol").toString()); %></a>
                     <ul class="dropdown-menu dropdown-menu-dark mx-0 border-0 shadow" aria-labelledby="dropdown0">
                         <a class="dropdown-item d-flex gap-2 align-items-center" href="informacion.jsp">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle" viewBox="0 0 16 16">
@@ -100,6 +111,27 @@
 <body>
 <div class="container">
     <br><h1>Registro de Casos</h1><br>
+    <%
+        if(session_actual.getAttribute("id_rol").equals("1")){
+            %><jsp:include page="casosJefeAdmin.jsp"/><%
+        }
+
+        if(session_actual.getAttribute("id_rol").equals("2") && session_actual.getAttribute("id_departamento").equals("1")){
+            %><jsp:include page="casosJefeFuncional.jsp"/><%
+        }
+
+        if(session_actual.getAttribute("id_rol").equals("3") && session_actual.getAttribute("id_departamento").equals("1")){
+            %><jsp:include page="casosJefeDesarrollo.jsp"/><%
+        }
+
+        if(session_actual.getAttribute("id_rol").equals("5") && session_actual.getAttribute("id_departamento").equals("1")){
+            %><jsp:include page="casosProgramadores.jsp"/><%
+        }
+
+        if(session_actual.getAttribute("id_rol").equals("6") && session_actual.getAttribute("id_departamento").equals("1")){
+            %><jsp:include page="casosTesters.jsp"/><%
+        }
+    %>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js" integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>
@@ -107,3 +139,57 @@
 <script src="js/funciones.js"></script>
 </body>
 </html>
+<%
+    if (request.getParameter("guardado") != null){
+        out.println("<div class=\"alert alert-success alert-dismissible fade show fixed-top text-center\" role=\"alert\">\n" +
+                "       <svg xmlns=\"http://www.w3.org/2000/svg\" style=\"display: none;\">\n" +
+                "          <symbol id=\"check-circle-fill\" fill=\"currentColor\" viewBox=\"0 0 16 16\">\n" +
+                "              <path d=\"M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z\"/>\n" +
+                "           </symbol>\n" +
+                "        </svg>\n" +
+                "        <svg class=\"bi flex-shrink-0 me-2\" width=\"24\" height=\"24\" role=\"img\" aria-label=\"Success:\"><use xlink:href=\"#check-circle-fill\"/></svg>\n" +
+                "         <b>Caso registrado correctamente</b>\n" +
+                "         <button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"alert\" aria-label=\"Close\"></button>\n" +
+                "     </div>");
+    }
+
+    if (request.getParameter("eliminado") != null){
+        out.println("<div class=\"alert alert-warning alert-dismissible fade show fixed-top text-center\" role=\"alert\">\n" +
+                "       <svg xmlns=\"http://www.w3.org/2000/svg\" style=\"display: none;\">\n" +
+                "          <symbol id=\"check-circle-fill\" fill=\"currentColor\" viewBox=\"0 0 16 16\">\n" +
+                "              <path d=\"M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z\"/>\n" +
+                "           </symbol>\n" +
+                "        </svg>\n" +
+                "        <svg class=\"bi flex-shrink-0 me-2\" width=\"24\" height=\"24\" role=\"img\" aria-label=\"Success:\"><use xlink:href=\"#check-circle-fill\"/></svg>\n" +
+                "         <b>Caso eliminado correctamente</b>\n" +
+                "         <button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"alert\" aria-label=\"Close\"></button>\n" +
+                "     </div>");
+    }
+
+    if (request.getParameter("modificado") != null){
+        out.println("<div class=\"alert alert-success alert-dismissible fade show fixed-top text-center\" role=\"alert\">\n" +
+                "       <svg xmlns=\"http://www.w3.org/2000/svg\" style=\"display: none;\">\n" +
+                "          <symbol id=\"check-circle-fill\" fill=\"currentColor\" viewBox=\"0 0 16 16\">\n" +
+                "              <path d=\"M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z\"/>\n" +
+                "           </symbol>\n" +
+                "        </svg>\n" +
+                "        <svg class=\"bi flex-shrink-0 me-2\" width=\"24\" height=\"24\" role=\"img\" aria-label=\"Success:\"><use xlink:href=\"#check-circle-fill\"/></svg>\n" +
+                "         <b>Caso modificado correctamente</b>\n" +
+                "         <button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"alert\" aria-label=\"Close\"></button>\n" +
+                "     </div>");
+    }
+
+    if (request.getParameter("error") != null){
+        out.println("<div class=\"alert alert-danger alert-dismissible fade show fixed-top text-center\" role=\"alert\">\n" +
+                "       <svg xmlns=\"http://www.w3.org/2000/svg\" style=\"display: none;\">\n" +
+                "          <symbol id=\"check-circle-fill\" fill=\"currentColor\" viewBox=\"0 0 16 16\">\n" +
+                "              <path d=\"M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z\"/>\n" +
+                "           </symbol>\n" +
+                "        </svg>\n" +
+                "        <svg class=\"bi flex-shrink-0 me-2\" width=\"24\" height=\"24\" role=\"img\" aria-label=\"Success:\"><use xlink:href=\"#check-circle-fill\"/></svg>\n" +
+                "         <b>No se puede eliminar o modificar este caso por ya ha esta siendo procesado</b>\n" +
+                "         <button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"alert\" aria-label=\"Close\"></button>\n" +
+                "     </div>");
+    }
+}
+%>

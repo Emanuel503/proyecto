@@ -1,5 +1,11 @@
 <%@ page import="jakarta.servlet.http.HttpSession" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ page import="proyecto.beans.UsuariosBean" %>
+<jsp:useBean id="usuariolist" class="proyecto.beans.UsuariosBean" scope="request"></jsp:useBean>
+<%@ page import="proyecto.beans.RolesBean" %>
+<jsp:useBean id="roleslist" class="proyecto.beans.RolesBean" scope="request"></jsp:useBean>
+<%@ page import="proyecto.beans.DepartamentosBean" %>
+<jsp:useBean id="departamentolist" class="proyecto.beans.DepartamentosBean" scope="request"></jsp:useBean>
 <%
     HttpSession session_actual = request.getSession(false);
     String id = (String) session_actual.getAttribute("id");
@@ -110,7 +116,53 @@
 </nav>
 <body>
 <div class="container">
-    <br><h1>Sistema de gestion de proyectos</h1><br>
+    <br><br><h1>Detalles del usuario</h1><br>
+    <%
+        for (UsuariosBean usuario: usuariolist.obtenerUsuario(Integer.parseInt(request.getParameter("id")))) {
+    %>
+    <div class="row g-3 align-items-center">
+        <div class="col-2">
+            <label for="nombre" class="col-form-label">Nombre del usuario: </label>
+        </div>
+        <div class="col-10">
+            <input readonly type="text" class="form-control" id="nombre" name="nombre" required value="<%= usuario.getNombre() %>">
+        </div>
+
+        <div class="col-2">
+            <label for="id_rol" class="col-form-label">Rol de usuario: </label>
+        </div>
+        <div class="col-10">
+            <select disabled class="form-select" id="id_rol" name="id_rol">
+                <%
+                    for (RolesBean rol: roleslist.obtenerRoles()) {
+                        if (rol.getId() == usuario.getId_rol()){ %>
+                <option selected value="<%= rol.getId()%>"><%= rol.getRol() %></option>
+                <%}else{%>
+                <option value="<%= rol.getId()%>"><%= rol.getRol() %></option>
+                <%}
+                }%>
+            </select>
+        </div>
+
+        <div class="col-2">
+            <label for="id_departamento" class="col-form-label">Departamento: </label>
+        </div>
+        <div class="col-10">
+            <select disabled class="form-select" id="id_departamento" name="id_departamento">
+                <%
+                    for (DepartamentosBean departamento: departamentolist.obtenerDepartamentos()) {
+                        if (departamento.getId() == usuario.getId_departamento()){ %>
+                <option selected value="<%= departamento.getId()%>"><%= departamento.getNombre() %></option>
+                <%}else{%>
+                <option value="<%= departamento.getId()%>"><%= departamento.getNombre() %></option>
+                <%}
+                }%>
+            </select>
+        </div>
+    </div>
+    <% } %>
+
+    <br><br><h2>Casos asignados al usuario</h2>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js" integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>

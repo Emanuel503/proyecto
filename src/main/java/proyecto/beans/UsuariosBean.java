@@ -144,6 +144,34 @@ public class UsuariosBean {
         }
     }
 
+    public List<UsuariosBean> obtenerUsuariosDepartamento(String id_departamento){
+        try {
+            st = conexion.prepareStatement("SELECT * FROM `usuarios` INNER JOIN roles_usuarios ON usuarios.id_rol = roles_usuarios.id INNER JOIN departamentos on usuarios.id_departamento = departamentos.id WHERE id_departamento=?");
+            st.setString(1, id_departamento);
+            rs = st.executeQuery();
+            List<UsuariosBean> list = new ArrayList<>();
+            while (rs.next()){
+                UsuariosBean usuarios = new UsuariosBean();
+                usuarios.setId(rs.getInt(1));
+                usuarios.setId_departamento(rs.getInt("id_departamento"));
+                usuarios.setDepartamento(rs.getString(14));
+                usuarios.setId_rol(rs.getInt("id_rol"));
+                usuarios.setRol(rs.getString("rol"));
+                usuarios.setNombre(rs.getString("nombre"));
+                usuarios.setIdentificacion(rs.getString("identificacion"));
+                usuarios.setFecha_nacimiento(rs.getString("fecha_nacimiento"));
+                usuarios.setSexo(rs.getString("sexo"));
+                usuarios.setCorreo(rs.getString("correo"));
+                usuarios.setPassword(rs.getString("password"));
+                list.add(usuarios);
+            }
+            return list;
+        }catch (SQLException throwables) {
+            throwables.printStackTrace();
+            return null;
+        }
+    }
+
     public List<UsuariosBean> obtenerUsuario(int id){
         try {
             st = conexion.prepareStatement("SELECT * FROM `usuarios` INNER JOIN roles_usuarios ON usuarios.id_rol = roles_usuarios.id INNER JOIN departamentos on usuarios.id_departamento = departamentos.id WHERE usuarios.id = ?");
@@ -172,9 +200,27 @@ public class UsuariosBean {
         }
     }
 
-    public List<UsuariosBean> obtenerUsuariosEmpleados(){
+    public List<UsuariosBean> obtenerUsuariosProgramador(){
         try {
-            st = conexion.prepareStatement("SELECT id, nombre FROM usuarios WHERE id_rol = 3;");
+            st = conexion.prepareStatement("SELECT id, nombre FROM usuarios WHERE id_rol = 5;");
+            rs = st.executeQuery();
+            List<UsuariosBean> list = new ArrayList<>();
+            while (rs.next()){
+                UsuariosBean usuarios = new UsuariosBean();
+                usuarios.setId(rs.getInt("id"));
+                usuarios.setNombre(rs.getString("nombre"));
+                list.add(usuarios);
+            }
+            return list;
+        }catch (SQLException throwables) {
+            throwables.printStackTrace();
+            return null;
+        }
+    }
+
+    public List<UsuariosBean> obtenerUsuariosTester(){
+        try {
+            st = conexion.prepareStatement("SELECT id, nombre FROM usuarios WHERE id_rol = 6;");
             rs = st.executeQuery();
             List<UsuariosBean> list = new ArrayList<>();
             while (rs.next()){
@@ -192,7 +238,7 @@ public class UsuariosBean {
 
     public List<UsuariosBean> obtenerUsuariosJefes(){
         try {
-            st = conexion.prepareStatement("SELECT id, nombre FROM usuarios WHERE id_rol = 2;");
+            st = conexion.prepareStatement("SELECT id, nombre FROM usuarios WHERE id_rol = 3;");
             rs = st.executeQuery();
             List<UsuariosBean> list = new ArrayList<>();
             while (rs.next()){
