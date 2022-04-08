@@ -4,10 +4,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UsuariosBean {
-    Connection conexion =  null;
-    ResultSet rs = null;
-    PreparedStatement st = null;
+public class UsuariosBean extends Conexion{
     private int id;
     private int id_departamento;
     private String departamento;
@@ -19,15 +16,6 @@ public class UsuariosBean {
     private String sexo;
     private String correo;
     private String password;
-
-    public UsuariosBean(){
-        try{
-            Class.forName("com.mysql.jdbc.Driver");
-            conexion = DriverManager.getConnection("jdbc:mysql://localhost/proyectopoo","root","");
-        }catch (ClassNotFoundException | SQLException e) {
-            e.printStackTrace();
-        }
-    }
 
     public int getId() {
         return id;

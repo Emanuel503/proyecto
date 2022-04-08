@@ -4,23 +4,11 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DepartamentosBean {
-    Connection conexion =  null;
-    ResultSet rs = null;
-    PreparedStatement st = null;
+public class DepartamentosBean extends Conexion {
     private int id;
     private String codigo;
     private String nombre;
     private String Descripcion;
-
-    public DepartamentosBean(){
-        try{
-            Class.forName("com.mysql.jdbc.Driver");
-            conexion = DriverManager.getConnection("jdbc:mysql://localhost/proyectopoo","root","");
-        }catch (ClassNotFoundException | SQLException e) {
-            e.printStackTrace();
-        }
-    }
 
     public int getId() {
         return id;

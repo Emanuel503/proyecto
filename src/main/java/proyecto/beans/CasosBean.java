@@ -4,10 +4,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CasosBean {
-    Connection conexion =  null;
-    ResultSet rs = null;
-    PreparedStatement st = null;
+public class CasosBean extends Conexion{
     private int id;
     private int id_estado;
     private String estado;
@@ -23,15 +20,6 @@ public class CasosBean {
     private String pdf_apertura;
     private String fecha_apertura;
     private String fecha_limite;
-
-    public CasosBean(){
-        try{
-            Class.forName("com.mysql.jdbc.Driver");
-            conexion = DriverManager.getConnection("jdbc:mysql://localhost/proyectopoo","root","");
-        }catch (ClassNotFoundException | SQLException e) {
-            e.printStackTrace();
-        }
-    }
 
     public int getId() {
         return id;
