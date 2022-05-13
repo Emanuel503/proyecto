@@ -13,6 +13,14 @@
     switch (opcion){
         case "guardarDepartamento":
 
+            nombre = request.getParameter("nombre");
+            descripcion = request.getParameter("descripcion");
+
+            if(nombre.isEmpty() || descripcion.isEmpty()){
+                response.sendRedirect("departamentos.jsp?errorDatos");
+                return;
+            }
+
             //Generacion del codigo del departamento
             SimpleDateFormat sdf = new SimpleDateFormat("yyMMdd", Locale.ENGLISH);
             Date fecha = new Date();
@@ -29,8 +37,7 @@
             }
 
             codigo = letras + fechaString + numero;
-            nombre = request.getParameter("nombre");
-            descripcion = request.getParameter("descripcion");
+
             st = conexion.prepareStatement("INSERT INTO departamentos (codigo, nombre, descripcion) VALUES (?,?,?)");
             st.setString(1, codigo);
             st.setString(2, nombre);
@@ -42,6 +49,12 @@
             id = Integer.parseInt(request.getParameter("id"));
             nombre = request.getParameter("nombre");
             descripcion = request.getParameter("descripcion");
+
+            if(nombre.isEmpty() || descripcion.isEmpty()){
+                response.sendRedirect("departamentos.jsp?errorDatos");
+                return;
+            }
+
             st = conexion.prepareStatement("UPDATE departamentos SET nombre=?,descripcion=? WHERE id=?");
             st.setString(1, nombre);
             st.setString(2, descripcion);

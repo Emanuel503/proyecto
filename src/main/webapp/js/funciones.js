@@ -26,9 +26,16 @@ function eliminarDepartamento(id){
     }
 }
 
-function eliminarCaso(id){
+function eliminarCasoRequerimiento(id){
     let opcion = confirm("¿Estas seguro que quieres eliminar este caso?");
     if (opcion){
-        location.href = "controllerCasos.jsp?id="+id+"&opcion=eliminarCaso";
+        location.href = "controllerCasos.jsp?id="+id+"&opcion=eliminarCasoRequerimiento";
+    }
+}
+
+function eliminarBitacora(id){
+    let opcion = confirm("¿Estas seguro que quieres eliminar esta bitacora?");
+    if (opcion){
+        location.href = "controllerBitacora.jsp?id="+id+"&opcion=eliminarBitacora";
     }
 }

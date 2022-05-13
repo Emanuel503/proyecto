@@ -6,6 +6,8 @@
 <jsp:useBean id="roleslist" class="proyecto.beans.RolesBean" scope="request"></jsp:useBean>
 <%@ page import="proyecto.beans.DepartamentosBean" %>
 <jsp:useBean id="departamentolist" class="proyecto.beans.DepartamentosBean" scope="request"></jsp:useBean>
+<%@ page import="proyecto.beans.CasosBean" %>
+<jsp:useBean id="casoslist" class="proyecto.beans.CasosBean" scope="request"></jsp:useBean>
 <%
     HttpSession session_actual = request.getSession(false);
     String id = (String) session_actual.getAttribute("id");
@@ -117,6 +119,7 @@
 <body>
 <div class="container">
     <br><br><h1>Detalles del usuario</h1><br>
+    <a href="usuarios.jsp" class="btn btn-outline-secondary">Regresar</a><br><br>
     <%
         for (UsuariosBean usuario: usuariolist.obtenerUsuario(Integer.parseInt(request.getParameter("id")))) {
     %>
@@ -162,7 +165,48 @@
     </div>
     <% } %>
 
-    <br><br><h2>Casos asignados al usuario</h2>
+    <br><br><h2>Casos asignados al usuario</h2><br>
+
+    <table class="table table-striped table-hover table-bordered">
+        <thead class="table-dark">
+        <tr>
+            <th>#</th>
+            <th>Descripcion del requerimiento</th>
+            <th>PDF apertura(opcional)</th>
+            <th>Estado del caso</th>
+            <th>Opciones</th>
+        </tr>
+        </thead>
+        <tbody>
+        <%
+            int contador=0;
+            for (CasosBean caso: casoslist.obtenerCasoAbiertoProgramador(request.getParameter("id"))) {
+                contador++;
+        %>
+        <tr>
+            <td><%= contador %></td>
+            <td><%= caso.getDescripcion_requerimiento() %></td>
+            <td>
+                <%
+                    if(caso.getPdf_requerimiento()==null || caso.getPdf_requerimiento().isEmpty() ){
+                        out.println("Sin PDF");
+                    }else{
+                        out.println(caso.getPdf_requerimiento());
+                    }
+                %>
+            </td>
+            <td><%= caso.getEstado() %></td>
+            <td>
+                <% if(caso.getId_estado() == 1 || caso.getId_estado() == 2){%>
+                <a href="detallesCasoRequerimientos.jsp?id=<%= caso.getId() %>" class="btn btn-primary">Detalles</a>
+                <% }else{ %>
+                <a href="detallesCasoAbierto.jsp?id=<%= caso.getId() %>" class="btn btn-primary">Detalles</a>
+                <% } %>
+            </td>
+        </tr>
+        <%}%>
+        </tbody>
+    </table>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js" integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>

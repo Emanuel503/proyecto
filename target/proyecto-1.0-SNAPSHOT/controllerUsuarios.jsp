@@ -28,6 +28,7 @@
                     session_actual.setAttribute("id",rs.getString(1));
                     session_actual.setAttribute("id_departamento",rs.getString("id_departamento"));
                     session_actual.setAttribute("departamento",rs.getString(14));
+                    session_actual.setAttribute("codigo",rs.getString("codigo"));
                     session_actual.setAttribute("id_rol", rs.getString("id_rol"));
                     session_actual.setAttribute("rol", rs.getString("rol"));
                     session_actual.setAttribute("nombre",rs.getString("nombre"));
@@ -48,6 +49,7 @@
             session_actual.setAttribute("id",null);
             session_actual.setAttribute("id_departamento",null);
             session_actual.setAttribute("departamento",null);
+            session_actual.setAttribute("codigo",null);
             session_actual.setAttribute("id_rol",null);
             session_actual.setAttribute("rol",null);
             session_actual.setAttribute("nombre",null);
@@ -62,11 +64,17 @@
             id_departamento = Integer.parseInt(request.getParameter("id_departamento"));
             id_rol = Integer.parseInt(request.getParameter("id_rol"));
             nombre = request.getParameter("nombre");
-            identificacion = request.getParameter("identificacion");;
-            fecha_nacimiento = request.getParameter("fecha_nacimiento");;
-            sexo = request.getParameter("sexo");;
-            correo = request.getParameter("correo");;
-            password = request.getParameter("password");;
+            identificacion = request.getParameter("identificacion");
+            fecha_nacimiento = request.getParameter("fecha_nacimiento");
+            sexo = request.getParameter("sexo");
+            correo = request.getParameter("correo");
+            password = request.getParameter("password");
+
+            if(nombre.isEmpty() || nombre.isEmpty() || identificacion.isEmpty() || fecha_nacimiento.isEmpty() || sexo.isEmpty() || correo.isEmpty() || password.isEmpty()){
+                response.sendRedirect("usuarios.jsp?errorDatos");
+                return;
+            }
+
             st = conexion.prepareStatement("INSERT INTO usuarios (id_departamento, id_rol, nombre, identificacion, fecha_nacimiento, sexo, correo, password) VALUES (?,?,?,?,?,?,?,?)");
             st.setInt(1, id_departamento);
             st.setInt(2, id_rol);
@@ -84,11 +92,17 @@
             id_departamento = Integer.parseInt(request.getParameter("id_departamento"));
             id_rol = Integer.parseInt(request.getParameter("id_rol"));
             nombre = request.getParameter("nombre");
-            identificacion = request.getParameter("identificacion");;
-            fecha_nacimiento = request.getParameter("fecha_nacimiento");;
-            sexo = request.getParameter("sexo");;
-            correo = request.getParameter("correo");;
-            password = request.getParameter("password");;
+            identificacion = request.getParameter("identificacion");
+            fecha_nacimiento = request.getParameter("fecha_nacimiento");
+            sexo = request.getParameter("sexo");
+            correo = request.getParameter("correo");
+            password = request.getParameter("password");
+
+            if(nombre.isEmpty() || nombre.isEmpty() || identificacion.isEmpty() || fecha_nacimiento.isEmpty() || sexo.isEmpty() || correo.isEmpty() || password.isEmpty()){
+                response.sendRedirect("usuarios.jsp?errorDatos");
+                return;
+            }
+
             st = conexion.prepareStatement("UPDATE usuarios SET id_departamento=?, id_rol=?, nombre=?, identificacion=?, fecha_nacimiento=?, sexo=?, correo=?, password=? WHERE id=?");
             st.setInt(1, id_departamento);
             st.setInt(2, id_rol);

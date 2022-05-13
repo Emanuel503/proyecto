@@ -1,18 +1,17 @@
 <%@ page import="jakarta.servlet.http.HttpSession" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ page import="proyecto.beans.UsuariosBean" %>
-<jsp:useBean id="usuariolist" class="proyecto.beans.UsuariosBean" scope="request"></jsp:useBean>
+<%@ page import="proyecto.beans.CasosBean" %>
+<jsp:useBean id="casosList" class="proyecto.beans.CasosBean" scope="request"></jsp:useBean>
 <%@ page import="proyecto.beans.UsuariosProgramadoresBeans" %>
-<jsp:useBean id="usuarioprogramadoreslist" class="proyecto.beans.UsuariosProgramadoresBeans" scope="request"></jsp:useBean>
+<jsp:useBean id="usuarioProgramadorList" class="proyecto.beans.UsuariosProgramadoresBeans" scope="request"></jsp:useBean>
+<%@ page import="proyecto.beans.UsuariosBean" %>
+<jsp:useBean id="usuarioTesterList" class="proyecto.beans.UsuariosBean" scope="request"></jsp:useBean>
 <%
     HttpSession session_actual = request.getSession(false);
     String id = (String) session_actual.getAttribute("id");
     if (id == null) {
         response.sendRedirect("index.jsp");
     }else{
-        if(!session_actual.getAttribute("id_rol").toString().equals("1")){
-            response.sendRedirect("index.jsp");
-        }
 %>
 <!DOCTYPE html>
 <html lang="es">
@@ -117,78 +116,147 @@
 </nav>
 <body>
 <div class="container">
-    <br><h1>Registro de programadores</h1><br>
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal">Registrar programador</button><br><br>
-    <table class="table table-striped table-hover table-bordered">
-        <thead class="table-dark">
-        <tr>
-            <th>#</th>
-            <th>Nombre del programador</th>
-            <th>Nombre del jefe</th>
-            <th>Opciones</th>
-        </tr>
-        </thead>
-        <tbody>
-        <%
-            int contador=0;
-            for (UsuariosProgramadoresBeans usuariosProgramadores: usuarioprogramadoreslist.obtenerUsuariosProgramadores()) {
-                contador++;
-        %>
-        <tr>
-            <td><%= contador %></td>
-            <td><%= usuariosProgramadores.getNombre_programador() %></td>
-            <td><%= usuariosProgramadores.getNombre_jefe() %></td>
-            <td>
-                <button onclick="eliminarProgramador(<%= usuariosProgramadores.getId() %>)" class="btn btn-danger">Eliminar</button>
-            </td>
-        </tr>
-        <%}%>
-        </tbody>
-    </table>
-</div>
-<div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Registar usuario</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    <br><h1>Detalles del caso</h1><br>
+    <a href="casos.jsp" class="btn btn-outline-secondary">Regresar</a><br><br>
+    <%for (CasosBean caso: casosList.obtenerCasoRequerimiento(request.getParameter("id"))) { %>
+        <div class="row g-3 align-items-center">
+            <div class="col-2">
+                <label for="descripcion_requerimiento" class="col-form-label">Descripcion del requerimiento: </label>
             </div>
-            <form action="controllerUsuariosProgramadores.jsp" method="post">
-                <input hidden name="opcion" value="guardarProgramador">
-                <div class="modal-body">
-                    <div class="row g-3 align-items-center">
-                        <div class="col-2">
-                            <label for="id_programador" class="col-form-label">Seleccione el empleado: </label>
-                        </div>
-                        <div class="col-10">
-                            <select class="form-select" id="id_programador" name="id_programador">
-                                <%
-                                for (UsuariosBean usuariosProgramador: usuariolist.obtenerUsuariosProgramador()) {%>
-                                    <option value="<%= usuariosProgramador.getId()%>"><%= usuariosProgramador.getNombre() %></option>
-                                <%}%>
-                            </select>
-                        </div>
+            <div class="col-10">
+                <input readonly type="text" class="form-control" id="descripcion_requerimiento" name="descripcion_requerimiento" value="<%= caso.getDescripcion_requerimiento() %>" required>
+            </div>
 
-                        <div class="col-2">
-                            <label for="id_jefe" class="col-form-label">Seleccione el jefe: </label>
-                        </div>
-                        <div class="col-10">
-                            <select class="form-select" id="id_jefe" name="id_jefe">
-                                <%
-                                for (UsuariosBean usuariosJefes: usuariolist.obtenerUsuariosJefes()) {%>
-                                    <option value="<%= usuariosJefes.getId()%>"><%= usuariosJefes.getNombre() %></option>
-                                <%}%>
-                            </select>
-                        </div>
+            <div class="col-2">
+                <label for="pdf_requerimiento" class="col-form-label">PDF (opcional): </label>
+            </div>
+            <div class="col-10">
+                <input readonly type="file" accept=".pdf" class="form-control" id="pdf_requerimiento" name="pdf_requerimiento">
+            </div>
+
+            <div class="col-2">
+                <label for="porcentaje" class="col-form-label">Porcentaje de avance: </label>
+            </div>
+            <div class="col-10">
+                <input readonly type="text" class="form-control" id="porcentaje" name="porcentaje" value="<%= caso.getPorcentaje() %>%">
+            </div>
+
+            <div class="col-2">
+                <label for="id_estado" class="col-form-label">Estado del caso: </label>
+            </div>
+            <div class="col-10">
+                <input readonly type="text" class="form-control" id="id_estado" name="id_estado" value="<%= caso.getEstado() %>">
+            </div>
+
+            <% if(caso.getId_estado() == 2){ %>
+                <div class="col-2">
+                    <label for="argumento_rechazo1" class="col-form-label">Argumento de rechazo: </label>
+                </div>
+                <div class="col-10">
+                    <input readonly type="text" class="form-control" id="argumento_rechazo1" name="argumento_rechazo" value="<%= caso.getArgumento_rechazo() %>">
+                </div>
+            <% } %>
+        </div><br>
+    <% if (session_actual.getAttribute("id_rol").toString().equals("3")){%>
+        <% if (caso.getId_estado() == 1){%>
+        <button type="button"data-bs-toggle="modal" data-bs-target="#modalAceptar" class="btn btn-success">Aceptar caso</button>
+        <button type="button"data-bs-toggle="modal" data-bs-target="#modalRechazar" class="btn btn-danger">Rechazar caso</button>
+        <%}%>
+
+        <div class="modal fade" id="modalAceptar" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel1" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel1">Aceptar caso</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
+                    <form action="controllerCasos.jsp" method="post">
+                        <input hidden name="opcion" value="aceptarCaso">
+                        <input hidden name="id" value="<%= request.getParameter("id")%>">
+                        <div class="modal-body">
+                            <div class="row g-3 align-items-center">
+                                <div class="col-2">
+                                    <label for="id_programador" class="col-form-label">Seleccione al programador: </label>
+                                </div>
+                                <div class="col-10">
+                                    <select id="id_programador" name="id_programador" class="form-select">
+                                        <%for (UsuariosProgramadoresBeans usuarioProgramadores: usuarioProgramadorList.obtenerUsuariosProgramadoresJefe(session_actual.getAttribute("id").toString())) { %>
+                                            <option value="<%= usuarioProgramadores.getId()%>"><%= usuarioProgramadores.getNombre_programador() %></option>
+                                        <%}%>
+                                    </select>
+                                </div>
+
+                                <div class="col-2">
+                                    <label for="id_tester" class="col-form-label">Seleccione al tester: </label>
+                                </div>
+                                <div class="col-10">
+                                    <select id="id_tester" name="id_tester" class="form-select">
+                                        <%for (UsuariosBean usuarioTester: usuarioTesterList.obtenerUsuariosTester()) { %>
+                                        <option value="<%= usuarioTester.getId()%>"><%= usuarioTester.getNombre() %></option>
+                                        <%}%>
+                                    </select>
+                                </div>
+
+                                <div class="col-2">
+                                    <label for="fecha_limite" class="col-form-label">Seleccione la fecha limite: </label>
+                                </div>
+                                <div class="col-10">
+                                    <input type="date" name="fecha_limite" id="fecha_limite" class="form-control" required>
+                                </div>
+
+                                <div class="col-2">
+                                    <label for="descripcion_apertura" class="col-form-label">Descripcion: </label>
+                                </div>
+                                <div class="col-10">
+                                    <input type="text" name="descripcion_apertura" id="descripcion_apertura" class="form-control" required>
+                                </div>
+
+                                <div class="col-2">
+                                    <label for="pdf_apertura" class="col-form-label">PDF (opcional): </label>
+                                </div>
+                                <div class="col-10">
+                                    <input type="file" accept=".pdf" class="form-control" id="pdf_apertura" name="pdf_apertura">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-primary">Abrir caso</button>
+                        </div>
+                    </form>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="submit" class="btn btn-primary">Guardar programador</button>
-                </div>
-            </form>
+            </div>
         </div>
-    </div>
+
+        <div class="modal fade" id="modalRechazar" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel2" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel2">Rechazar caso</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form action="controllerCasos.jsp" method="post">
+                        <input hidden name="opcion" value="rechazarCaso">
+                        <input hidden name="id" value="<%= request.getParameter("id")%>">
+                        <div class="modal-body">
+                            <div class="row g-3 align-items-center">
+                                <div class="col-2">
+                                    <label for="argumento_rechazo" class="col-form-label">Descripcion: </label>
+                                </div>
+                                <div class="col-10">
+                                    <input type="text" name="argumento_rechazo" id="argumento_rechazo" class="form-control" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-primary">Rechazar caso</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    <%}%>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js" integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>
@@ -196,57 +264,5 @@
 <script src="js/funciones.js"></script>
 </body>
 </html>
-<%
-    if (request.getParameter("guardado") != null){
-        out.println("<div class=\"alert alert-success alert-dismissible fade show fixed-top text-center\" role=\"alert\">\n" +
-                "       <svg xmlns=\"http://www.w3.org/2000/svg\" style=\"display: none;\">\n" +
-                "          <symbol id=\"check-circle-fill\" fill=\"currentColor\" viewBox=\"0 0 16 16\">\n" +
-                "              <path d=\"M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z\"/>\n" +
-                "           </symbol>\n" +
-                "        </svg>\n" +
-                "        <svg class=\"bi flex-shrink-0 me-2\" width=\"24\" height=\"24\" role=\"img\" aria-label=\"Success:\"><use xlink:href=\"#check-circle-fill\"/></svg>\n" +
-                "         <b>Usuario registrado correctamente</b>\n" +
-                "         <button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"alert\" aria-label=\"Close\"></button>\n" +
-                "     </div>");
-    }
-
-    if (request.getParameter("eliminado") != null){
-        out.println("<div class=\"alert alert-warning alert-dismissible fade show fixed-top text-center\" role=\"alert\">\n" +
-                "       <svg xmlns=\"http://www.w3.org/2000/svg\" style=\"display: none;\">\n" +
-                "          <symbol id=\"check-circle-fill\" fill=\"currentColor\" viewBox=\"0 0 16 16\">\n" +
-                "              <path d=\"M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z\"/>\n" +
-                "           </symbol>\n" +
-                "        </svg>\n" +
-                "        <svg class=\"bi flex-shrink-0 me-2\" width=\"24\" height=\"24\" role=\"img\" aria-label=\"Success:\"><use xlink:href=\"#check-circle-fill\"/></svg>\n" +
-                "         <b>Usuario eliminado correctamente</b>\n" +
-                "         <button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"alert\" aria-label=\"Close\"></button>\n" +
-                "     </div>");
-    }
-
-    if (request.getParameter("error") != null){
-        out.println("<div class=\"alert alert-danger alert-dismissible fade show fixed-top text-center\" role=\"alert\">\n" +
-                "       <svg xmlns=\"http://www.w3.org/2000/svg\" style=\"display: none;\">\n" +
-                "          <symbol id=\"check-circle-fill\" fill=\"currentColor\" viewBox=\"0 0 16 16\">\n" +
-                "              <path d=\"M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z\"/>\n" +
-                "           </symbol>\n" +
-                "        </svg>\n" +
-                "        <svg class=\"bi flex-shrink-0 me-2\" width=\"24\" height=\"24\" role=\"img\" aria-label=\"Success:\"><use xlink:href=\"#check-circle-fill\"/></svg>\n" +
-                "         <b>No se puede eliminar este programador por ya tiene otros registros</b>\n" +
-                "         <button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"alert\" aria-label=\"Close\"></button>\n" +
-                "     </div>");
-    }
-
-    if (request.getParameter("errorGuardar") != null){
-        out.println("<div class=\"alert alert-warning alert-dismissible fade show fixed-top text-center\" role=\"alert\">\n" +
-                "       <svg xmlns=\"http://www.w3.org/2000/svg\" style=\"display: none;\">\n" +
-                "           <symbol id=\"exclamation-triangle-fill\" fill=\"currentColor\" viewBox=\"0 0 16 16\">\n" +
-                "               <path d=\"M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z\"/>\n" +
-                "            </symbol>\n" +
-                "        </svg>\n" +
-                "        <svg class=\"bi flex-shrink-0 me-2\" width=\"24\" height=\"24\" role=\"img\" aria-label=\"Warning:\"><use xlink:href=\"#exclamation-triangle-fill\"/></svg>\n" +
-                "         <b>Registro ya existente</b>\n" +
-                "         <button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"alert\" aria-label=\"Close\"></button>\n" +
-                "     </div>");
-    }
-}
-%>
+<% } %>
+<% } %>

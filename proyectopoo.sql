@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 08-04-2022 a las 07:00:40
+-- Tiempo de generación: 13-05-2022 a las 08:51:52
 -- Versión del servidor: 10.4.22-MariaDB
 -- Versión de PHP: 8.1.1
 
@@ -32,8 +32,19 @@ USE `proyectopoo`;
 CREATE TABLE `bitacora` (
   `id` int(11) NOT NULL,
   `id_caso` int(11) NOT NULL,
-  `cambios` varchar(300) NOT NULL
+  `cambios` varchar(300) NOT NULL,
+  `fecha` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Volcado de datos para la tabla `bitacora`
+--
+
+INSERT INTO `bitacora` (`id`, `id_caso`, `cambios`, `fecha`) VALUES
+(1, 3, 'Avance 1', '2022-05-12'),
+(2, 3, 'Avance 2', '2022-05-12'),
+(3, 3, 'Avance 3', '2022-05-12'),
+(4, 3, 'Avance 4', '2022-05-12');
 
 -- --------------------------------------------------------
 
@@ -43,19 +54,29 @@ CREATE TABLE `bitacora` (
 
 CREATE TABLE `casos` (
   `id` int(11) NOT NULL,
-  `id_estado` int(11) NOT NULL,
-  `id_programador` int(11) NOT NULL,
-  `id_tester` int(11) NOT NULL,
-  `codigo` varchar(100) NOT NULL,
-  `descripcion_requerimiento` varchar(300) NOT NULL,
+  `id_estado` int(11) DEFAULT NULL,
+  `id_programador` int(11) DEFAULT NULL,
+  `id_tester` int(11) DEFAULT NULL,
+  `codigo` varchar(100) DEFAULT NULL,
+  `descripcion_requerimiento` varchar(300) DEFAULT NULL,
   `pdf_requerimiento` varchar(200) DEFAULT NULL,
-  `argumento_rechazo` varchar(300) NOT NULL,
-  `descripcion_apertura` varchar(300) NOT NULL,
-  `pdf_apertura` varchar(100) NOT NULL,
-  `fecha_apertura` date NOT NULL,
-  `fecha_limite` date NOT NULL,
-  `porcentaje` varchar(10) NOT NULL
+  `argumento_rechazo` varchar(300) DEFAULT NULL,
+  `descripcion_apertura` varchar(300) DEFAULT NULL,
+  `pdf_apertura` varchar(100) DEFAULT NULL,
+  `fecha_apertura` date DEFAULT NULL,
+  `fecha_limite` date DEFAULT NULL,
+  `porcentaje` varchar(10) DEFAULT NULL,
+  `observacion_devolucion` varchar(100) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Volcado de datos para la tabla `casos`
+--
+
+INSERT INTO `casos` (`id`, `id_estado`, `id_programador`, `id_tester`, `codigo`, `descripcion_requerimiento`, `pdf_requerimiento`, `argumento_rechazo`, `descripcion_apertura`, `pdf_apertura`, `fecha_apertura`, `fecha_limite`, `porcentaje`, `observacion_devolucion`) VALUES
+(2, 2, NULL, NULL, NULL, 'Generación de reportes en PDF', '', 'Funcion ya implementada', NULL, NULL, NULL, NULL, '0', NULL),
+(3, 7, 8, 11, 'DNF22040574522676', 'Nueva funcionalidad', '', NULL, 'Trabajar', '', '2022-05-12', '2022-05-21', '100', 'Errores'),
+(8, 1, NULL, NULL, NULL, 'Corrección de errores aplicación ', '', NULL, NULL, NULL, NULL, NULL, '0', NULL);
 
 -- --------------------------------------------------------
 
@@ -237,19 +258,19 @@ ALTER TABLE `usuarios`
 -- AUTO_INCREMENT de la tabla `bitacora`
 --
 ALTER TABLE `bitacora`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de la tabla `casos`
 --
 ALTER TABLE `casos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT de la tabla `departamentos`
 --
 ALTER TABLE `departamentos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 
 --
 -- AUTO_INCREMENT de la tabla `estados_casos`
@@ -273,7 +294,7 @@ ALTER TABLE `roles_usuarios`
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- Restricciones para tablas volcadas

@@ -20,6 +20,8 @@ public class CasosBean extends Conexion{
     private String pdf_apertura;
     private String fecha_apertura;
     private String fecha_limite;
+    private String porcentaje;
+    private String observacion_devolucion;
 
     public int getId() {
         return id;
@@ -141,28 +143,37 @@ public class CasosBean extends Conexion{
         this.fecha_limite = fecha_limite;
     }
 
-    public List<CasosBean> obtenerCasos(){
+    public String getPorcentaje() {
+        return porcentaje;
+    }
+
+    public void setPorcentaje(String porcentaje) {
+        this.porcentaje = porcentaje;
+    }
+
+    public String getObservacion_devolucion() {
+        return observacion_devolucion;
+    }
+
+    public void setObservacion_devolucion(String observacion_devolucion) {
+        this.observacion_devolucion = observacion_devolucion;
+    }
+
+
+    public List<CasosBean> obtenerCasosRequerimiento(){
         try {
-            st = conexion.prepareStatement("SELECT C.id, C.id_estado, E.estado, C.id_programador, UP.nombre, C.id_tester, UT.nombre, C.codigo, C.descripcion_requerimiento, C.pdf_requerimiento, C.argumento_rechazo, C.descripcion_apertura, C.pdf_apertura, C.fecha_apertura, C.fecha_limite FROM casos C JOIN estados_casos E ON C.id_estado = E.id JOIN usuarios UP ON C.id_programador = UP.id JOIN usuarios UT ON C.id_tester = UT.id;");
+            st = conexion.prepareStatement("SELECT c.id, c.id_estado, c.descripcion_requerimiento, c.pdf_requerimiento, e.estado, c.porcentaje, c.argumento_rechazo FROM casos c JOIN estados_casos e ON c.id_estado = e.id ORDER BY c.id_estado");
             rs = st.executeQuery();
             List<CasosBean> list = new ArrayList<>();
             while (rs.next()){
                 CasosBean caso = new CasosBean();
                 caso.setId(rs.getInt("id"));
                 caso.setId_estado(rs.getInt("id_estado"));
-                caso.setEstado(rs.getString("estado"));
-                caso.setId_programador(rs.getInt("id_programador"));
-                caso.setNombre_programador(rs.getString(5));
-                caso.setId_tester(rs.getInt("id_tester"));
-                caso.setNombre_tester(rs.getString(7));
-                caso.setCodigo(rs.getString("codigo"));
                 caso.setDescripcion_requerimiento(rs.getString("descripcion_requerimiento"));
                 caso.setPdf_requerimiento(rs.getString("pdf_requerimiento"));
+                caso.setEstado(rs.getString("estado"));
+                caso.setPorcentaje(rs.getString("porcentaje"));
                 caso.setArgumento_rechazo(rs.getString("argumento_rechazo"));
-                caso.setDescripcion_apertura(rs.getString("descripcion_apertura"));
-                caso.setPdf_apertura(rs.getString("pdf_apertura"));
-                caso.setFecha_apertura(rs.getString("fecha_apertura"));
-                caso.setFecha_limite(rs.getString("fecha_limite"));
                 list.add(caso);
             }
             return list;
@@ -172,9 +183,33 @@ public class CasosBean extends Conexion{
         }
     }
 
-    public List<CasosBean> obtenerCaso(String id){
+    public List<CasosBean> obtenerCasoRequerimiento(String id){
         try {
-            st = conexion.prepareStatement("SELECT C.id, C.id_estado, E.estado, C.id_programador, UP.nombre, C.id_tester, UT.nombre, C.codigo, C.descripcion_requerimiento, C.pdf_requerimiento, C.argumento_rechazo, C.descripcion_apertura, C.pdf_apertura, C.fecha_apertura, C.fecha_limite FROM casos C JOIN estados_casos E ON C.id_estado = E.id JOIN usuarios UP ON C.id_programador = UP.id JOIN usuarios UT ON C.id_tester = UT.id WHERE C.id=?");
+            st = conexion.prepareStatement("SELECT c.id, c.id_estado, c.descripcion_requerimiento, c.pdf_requerimiento, e.estado, c.porcentaje, c.argumento_rechazo FROM casos c JOIN estados_casos e ON c.id_estado = e.id WHERE c.id=?");
+            st.setString(1,id);
+            rs = st.executeQuery();
+            List<CasosBean> list = new ArrayList<>();
+            while (rs.next()){
+                CasosBean caso = new CasosBean();
+                caso.setId(rs.getInt("id"));
+                caso.setId_estado(rs.getInt("id_estado"));
+                caso.setDescripcion_requerimiento(rs.getString("descripcion_requerimiento"));
+                caso.setPdf_requerimiento(rs.getString("pdf_requerimiento"));
+                caso.setEstado(rs.getString("estado"));
+                caso.setPorcentaje(rs.getString("porcentaje"));
+                caso.setArgumento_rechazo(rs.getString("argumento_rechazo"));
+                list.add(caso);
+            }
+            return list;
+        }catch (SQLException throwables) {
+            throwables.printStackTrace();
+            return null;
+        }
+    }
+
+    public List<CasosBean> obtenerCasoAbierto(String id){
+        try {
+            st = conexion.prepareStatement("SELECT C.id, C.id_estado, E.estado, C.id_programador, UP.nombre, C.id_tester, UT.nombre, C.codigo, C.descripcion_requerimiento, C.pdf_requerimiento, C.descripcion_apertura, C.pdf_apertura, C.fecha_apertura, C.fecha_limite, C.porcentaje, C.observacion_devolucion FROM casos C JOIN estados_casos E ON C.id_estado = E.id JOIN usuarios UP ON C.id_programador = UP.id JOIN usuarios UT ON C.id_tester = UT.id WHERE C.id=?");
             st.setString(1,id);
             rs = st.executeQuery();
             List<CasosBean> list = new ArrayList<>();
@@ -190,17 +225,180 @@ public class CasosBean extends Conexion{
                 caso.setCodigo(rs.getString("codigo"));
                 caso.setDescripcion_requerimiento(rs.getString("descripcion_requerimiento"));
                 caso.setPdf_requerimiento(rs.getString("pdf_requerimiento"));
-                caso.setArgumento_rechazo(rs.getString("argumento_rechazo"));
                 caso.setDescripcion_apertura(rs.getString("descripcion_apertura"));
                 caso.setPdf_apertura(rs.getString("pdf_apertura"));
                 caso.setFecha_apertura(rs.getString("fecha_apertura"));
                 caso.setFecha_limite(rs.getString("fecha_limite"));
+                caso.setPorcentaje(rs.getString("porcentaje"));
+                caso.setObservacion_devolucion(rs.getString("observacion_devolucion"));
                 list.add(caso);
             }
             return list;
         }catch (SQLException throwables) {
             throwables.printStackTrace();
             return null;
+        }
+    }
+
+    public List<CasosBean> obtenerCasoAbiertoProgramador(String id_programador){
+        try {
+            st = conexion.prepareStatement("SELECT C.id, C.id_estado, E.estado, C.id_programador, UP.nombre, C.id_tester, UT.nombre, C.codigo, C.descripcion_requerimiento, C.pdf_requerimiento, C.descripcion_apertura, C.pdf_apertura, C.fecha_apertura, C.fecha_limite, C.porcentaje, C.observacion_devolucion FROM casos C JOIN estados_casos E ON C.id_estado = E.id JOIN usuarios UP ON C.id_programador = UP.id JOIN usuarios UT ON C.id_tester = UT.id WHERE C.id_programador=?");
+            st.setString(1,id_programador);
+            rs = st.executeQuery();
+            List<CasosBean> list = new ArrayList<>();
+            while (rs.next()){
+                CasosBean caso = new CasosBean();
+                caso.setId(rs.getInt("id"));
+                caso.setId_estado(rs.getInt("id_estado"));
+                caso.setEstado(rs.getString("estado"));
+                caso.setId_programador(rs.getInt("id_programador"));
+                caso.setNombre_programador(rs.getString(5));
+                caso.setId_tester(rs.getInt("id_tester"));
+                caso.setNombre_tester(rs.getString(7));
+                caso.setCodigo(rs.getString("codigo"));
+                caso.setDescripcion_requerimiento(rs.getString("descripcion_requerimiento"));
+                caso.setPdf_requerimiento(rs.getString("pdf_requerimiento"));
+                caso.setDescripcion_apertura(rs.getString("descripcion_apertura"));
+                caso.setPdf_apertura(rs.getString("pdf_apertura"));
+                caso.setFecha_apertura(rs.getString("fecha_apertura"));
+                caso.setFecha_limite(rs.getString("fecha_limite"));
+                caso.setPorcentaje(rs.getString("porcentaje"));
+                caso.setObservacion_devolucion(rs.getString("observacion_devolucion"));
+                list.add(caso);
+            }
+            return list;
+        }catch (SQLException throwables) {
+            throwables.printStackTrace();
+            return null;
+        }
+    }
+
+    public List<CasosBean> obtenerCasoAbiertoTester(String id_tester){
+        try {
+            st = conexion.prepareStatement("SELECT C.id, C.id_estado, E.estado, C.id_programador, UP.nombre, C.id_tester, UT.nombre, C.codigo, C.descripcion_requerimiento, C.pdf_requerimiento, C.descripcion_apertura, C.pdf_apertura, C.fecha_apertura, C.fecha_limite, C.porcentaje, C.observacion_devolucion FROM casos C JOIN estados_casos E ON C.id_estado = E.id JOIN usuarios UP ON C.id_programador = UP.id JOIN usuarios UT ON C.id_tester = UT.id WHERE C.id_tester=? AND id_estado = 5");
+            st.setString(1,id_tester);
+            rs = st.executeQuery();
+            List<CasosBean> list = new ArrayList<>();
+            while (rs.next()){
+                CasosBean caso = new CasosBean();
+                caso.setId(rs.getInt("id"));
+                caso.setId_estado(rs.getInt("id_estado"));
+                caso.setEstado(rs.getString("estado"));
+                caso.setId_programador(rs.getInt("id_programador"));
+                caso.setNombre_programador(rs.getString(5));
+                caso.setId_tester(rs.getInt("id_tester"));
+                caso.setNombre_tester(rs.getString(7));
+                caso.setCodigo(rs.getString("codigo"));
+                caso.setDescripcion_requerimiento(rs.getString("descripcion_requerimiento"));
+                caso.setPdf_requerimiento(rs.getString("pdf_requerimiento"));
+                caso.setDescripcion_apertura(rs.getString("descripcion_apertura"));
+                caso.setPdf_apertura(rs.getString("pdf_apertura"));
+                caso.setFecha_apertura(rs.getString("fecha_apertura"));
+                caso.setFecha_limite(rs.getString("fecha_limite"));
+                caso.setPorcentaje(rs.getString("porcentaje"));
+                caso.setObservacion_devolucion(rs.getString("observacion_devolucion"));
+                list.add(caso);
+            }
+            return list;
+        }catch (SQLException throwables) {
+            throwables.printStackTrace();
+            return null;
+        }
+    }
+
+    public int obtenerNumeroCasos(){
+        try {
+            st = conexion.prepareStatement("SELECT COUNT(*) FROM casos;");
+            rs = st.executeQuery();
+            rs.next();
+            return rs.getInt("COUNT(*)");
+        }catch (SQLException throwables) {
+            throwables.printStackTrace();
+            return 0;
+        }
+    }
+
+    public int obtenerCasosEspera(){
+        try {
+            st = conexion.prepareStatement("SELECT COUNT(*) FROM casos WHERE id_estado = 1;");
+            rs = st.executeQuery();
+            rs.next();
+            return rs.getInt("COUNT(*)");
+        }catch (SQLException throwables) {
+            throwables.printStackTrace();
+            return 0;
+        }
+    }
+
+    public int obtenerCasosRechazados(){
+        try {
+            st = conexion.prepareStatement("SELECT COUNT(*) FROM casos WHERE id_estado = 2;");
+            rs = st.executeQuery();
+            rs.next();
+            return rs.getInt("COUNT(*)");
+        }catch (SQLException throwables) {
+            throwables.printStackTrace();
+            return 0;
+        }
+    }
+
+    public int obtenerCasosEnDesarrollo(){
+        try {
+            st = conexion.prepareStatement("SELECT COUNT(*) FROM casos WHERE id_estado = 3;");
+            rs = st.executeQuery();
+            rs.next();
+            return rs.getInt("COUNT(*)");
+        }catch (SQLException throwables) {
+            throwables.printStackTrace();
+            return 0;
+        }
+    }
+
+    public int obtenerCasosVencidos(){
+        try {
+            st = conexion.prepareStatement("SELECT COUNT(*) FROM casos WHERE id_estado = 4;");
+            rs = st.executeQuery();
+            rs.next();
+            return rs.getInt("COUNT(*)");
+        }catch (SQLException throwables) {
+            throwables.printStackTrace();
+            return 0;
+        }
+    }
+
+    public int obtenerCasosEsperaAprovacion(){
+        try {
+            st = conexion.prepareStatement("SELECT COUNT(*) FROM casos WHERE id_estado = 5;");
+            rs = st.executeQuery();
+            rs.next();
+            return rs.getInt("COUNT(*)");
+        }catch (SQLException throwables) {
+            throwables.printStackTrace();
+            return 0;
+        }
+    }
+
+    public int obtenerCasosObservaciones(){
+        try {
+            st = conexion.prepareStatement("SELECT COUNT(*) FROM casos WHERE id_estado = 6;");
+            rs = st.executeQuery();
+            rs.next();
+            return rs.getInt("COUNT(*)");
+        }catch (SQLException throwables) {
+            throwables.printStackTrace();
+            return 0;
+        }
+    }
+
+    public int obtenerCasosFinalizados(){
+        try {
+            st = conexion.prepareStatement("SELECT COUNT(*) FROM casos WHERE id_estado = 7;");
+            rs = st.executeQuery();
+            rs.next();
+            return rs.getInt("COUNT(*)");
+        }catch (SQLException throwables) {
+            throwables.printStackTrace();
+            return 0;
         }
     }
 }

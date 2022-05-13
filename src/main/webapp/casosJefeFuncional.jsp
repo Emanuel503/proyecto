@@ -6,7 +6,6 @@
     <thead class="table-dark">
     <tr>
         <th>#</th>
-        <th>Codigo</th>
         <th>Descripcion del requerimiento</th>
         <th>PDF apertura(opcional)</th>
         <th>Estado del caso</th>
@@ -16,19 +15,32 @@
     <tbody>
     <%
         int contador=0;
-        for (CasosBean caso: casoslist.obtenerCasos()) {
+        for (CasosBean caso: casoslist.obtenerCasosRequerimiento()) {
             contador++;
     %>
     <tr>
         <td><%= contador %></td>
-        <td><%= caso.getCodigo() %></td>
-        <td><%= caso.getDescripcion_apertura() %></td>
-        <td><%= caso.getPdf_apertura() %></td>
+        <td><%= caso.getDescripcion_requerimiento() %></td>
+        <td>
+            <%
+                if(caso.getPdf_requerimiento()==null || caso.getPdf_requerimiento().isEmpty() ){
+                    out.println("Sin PDF");
+                }else{
+                    out.println(caso.getPdf_requerimiento());
+                }
+            %>
+        </td>
         <td><%= caso.getEstado() %></td>
         <td>
-            <a href="detallesCaso.jsp?id=<%= caso.getId() %>" class="btn btn-primary">Detalles</a>
-            <a href="modificarCaso.jsp?id=<%= caso.getId() %>" class="btn btn-success">Modificar</a>
-            <button onclick="eliminarCaso(<%= caso.getId() %>)" class="btn btn-danger">Eliminar</button>
+            <% if(caso.getId_estado() == 1 || caso.getId_estado() == 2){%>
+            <a href="detallesCasoRequerimientos.jsp?id=<%= caso.getId() %>" class="btn btn-primary">Detalles</a>
+            <% }else{ %>
+            <a href="detallesCasoAbierto.jsp?id=<%= caso.getId() %>" class="btn btn-primary">Detalles</a>
+            <% } %>
+            <% if(caso.getId_estado() == 1){ %>
+                <a href="modificarCasoJefeArea.jsp?id=<%= caso.getId() %>" class="btn btn-success">Modificar</a>
+                <button onclick="eliminarCasoRequerimiento(<%= caso.getId() %>)" class="btn btn-danger">Eliminar</button>
+            <%}%>
         </td>
     </tr>
     <%}%>
@@ -42,22 +54,22 @@
                 <h5 class="modal-title" id="exampleModalLabel">Registar nuevo caso</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form action="controllerCasos.jsp" enctype="multipart/form-data" method="post">
+            <form action="controllerCasos.jsp" method="post">
                 <input hidden name="opcion" value="abrirCaso">
                 <div class="modal-body">
                     <div class="row g-3 align-items-center">
                         <div class="col-2">
-                            <label for="descripcion_apertura" class="col-form-label">Descripcion del requerimiento: </label>
+                            <label for="descripcion_requerimiento" class="col-form-label">Descripcion del requerimiento: </label>
                         </div>
                         <div class="col-10">
-                            <input type="text" class="form-control" id="descripcion_apertura" name="descripcion_apertura" required>
+                            <input type="text" class="form-control" id="descripcion_requerimiento" name="descripcion_requerimiento" required>
                         </div>
 
                         <div class="col-2">
-                            <label for="pdf_apertura" class="col-form-label">PDF (opcional): </label>
+                            <label for="pdf_requerimiento" class="col-form-label">PDF (opcional): </label>
                         </div>
                         <div class="col-10">
-                            <input type="file" accept=".pdf" class="form-control" id="pdf_apertura" name="pdf_apertura">
+                            <input type="file" accept=".pdf" class="form-control" id="pdf_requerimiento" name="pdf_requerimiento">
                         </div>
                     </div>
                 </div>

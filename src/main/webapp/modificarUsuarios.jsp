@@ -12,6 +12,10 @@
     if (id == null) {
         response.sendRedirect("index.jsp");
     }else{
+
+        if(!session_actual.getAttribute("id_rol").toString().equals("1")){
+            response.sendRedirect("index.jsp");
+        }
 %>
 <!DOCTYPE html>
 <html lang="es">
