@@ -119,6 +119,55 @@ body {
   text-decoration: underline;
 }
 
+/* Tabla de proyectos */
+.principal table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.principal th,
+.principal td {
+  padding: 10px 12px;
+  border: 1px solid var(--opal);
+  text-align: left;
+  vertical-align: top;
+}
+
+.principal th {
+  background: var(--mar);
+  color: var(--arena);
+}
+
+.principal tbody tr:nth-child(even) {
+  background: rgba(157, 190, 187, 0.25);
+}
+
+.principal td p {
+  margin-bottom: 8px;
+}
+
+.principal td p:last-child {
+  margin-bottom: 0;
+}
+
+.principal td a {
+  color: var(--mar);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.principal td a:hover {
+  text-decoration: underline;
+}
+
+.principal td.estado,
+.principal td.fecha {
+  white-space: nowrap;
+}
+
 /* Media Queries */
 .contenido {
   display: flex;
@@ -130,6 +179,10 @@ body {
 @media (max-width: 576px) {
   .contenido {
     display: block;
+  }
+  .principal table {
+    display: block;
+    overflow-x: auto;
   }
 }
 
