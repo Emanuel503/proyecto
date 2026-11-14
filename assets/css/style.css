@@ -119,6 +119,45 @@ body {
   text-decoration: underline;
 }
 
+/* Foto de perfil */
+.perfil {
+  display: block;
+  width: 300px;
+  height: 300px;
+  object-fit: cover;
+  border-radius: 10px;
+  border: 2px solid var(--mar);
+  margin: 20px auto;
+}
+
+/* Listado de tecnologías */
+.tecnologias {
+  display: grid;
+  grid-template-columns: repeat(3, auto);
+  justify-content: center;
+  column-gap: 48px;
+  row-gap: 20px;
+  margin: 20px 40px;
+  padding-left: 0;
+  line-height: 1.7;
+  list-style-position: inside;
+}
+
+.tecnologias > li {
+  font-weight: 600;
+}
+
+.tecnologias ul {
+  margin-left: 0;
+  margin-bottom: 0;
+  padding-left: 0;
+  list-style-position: inside;
+}
+
+.tecnologias ul li {
+  font-weight: 400;
+}
+
 /* Tabla de proyectos */
 .principal table {
   width: 100%;
@@ -183,6 +222,9 @@ body {
   .principal table {
     display: block;
     overflow-x: auto;
+  }
+  .tecnologias {
+    grid-template-columns: 1fr;
   }
 }
 
