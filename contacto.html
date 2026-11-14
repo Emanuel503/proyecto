@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portafolio - Emanuel Molina</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="cabecera">
+        <h1>Portafolio</h1>
+    </header>
+    <div class="contenido">
+        <nav class="menu col-t-2">
+            <ul>
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="acerca.html">Acerca de</a></li>
+                <li><a href="proyectos.html">Proyectos</a></li>
+                <li><a href="contacto.html">Contacto</a></li>
+            </ul>
+        </nav>
+        <main class="principal col-t-4">
+            <h2 class="text-center">Contacto</h2>
+
+            <form class="formulario" action="#" method="post" enctype="multipart/form-data">
+                <div class="campo">
+                    <label for="email">Correo electrónico *</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+
+                <div class="campo">
+                    <label for="password">Contraseña</label>
+                    <input type="password" id="password" name="password" minlength="8" placeholder="Mínimo 8 caracteres">
+                </div>
+
+                <div class="campo">
+                    <label for="pais">País *</label>
+                    <select id="pais" name="pais" required>
+                        <option value="">Selecciona un país</option>
+                        <option value="sv">El Salvador</option>
+                        <option value="hn">Honduras</option>
+                        <option value="gt">Guatemala</option>
+                    </select>
+                </div>
+
+                <fieldset class="opciones">
+                    <legend>Recibir notificaciones por correo</legend>
+                    <label><input type="radio" name="notificaciones" value="si" checked> Sí</label>
+                    <label><input type="radio" name="notificaciones" value="no"> No</label>
+                </fieldset>
+
+                <div class="opciones">
+                    <label><input type="checkbox" name="terminos" required> Aceptar términos y condiciones *</label>
+                </div>
+
+                <div class="campo">
+                    <label for="archivo">Adjuntar archivo (PDF o imagen)</label>
+                    <input type="file" id="archivo" name="archivo" accept=".pdf,image/*">
+                </div>
+
+                <div class="campo">
+                    <label for="comentario">Comentario</label>
+                    <textarea id="comentario" name="comentario" rows="5"></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-lg">Enviar</button>
+            </form>
+        </main>
+        <aside class="lateral col-t-6">
+            <div class="redes">
+                <a href="https://github.com/Emanuel503" target="_blank" rel="noopener noreferrer">
+                    <i class="fa-brands fa-github" aria-hidden="true"></i>
+                    <span>GitHub</span>
+                </a>
+                <a href="https://www.linkedin.com/in/emanuel-molina-3b30142aa/" target="_blank" rel="noopener noreferrer">
+                    <i class="fa-brands fa-linkedin-in" aria-hidden="true"></i>
+                    <span>LinkedIn</span>
+                </a>
+                <a href="https://www.instagram.com/emanuelmz_/?hl=es-la" target="_blank" rel="noopener noreferrer">
+                    <i class="fa-brands fa-instagram" aria-hidden="true"></i>
+                    <span>Instagram</span>
+                </a>
+            </div>
+        </aside>
+    </div>
+    <footer class="pie text-center">
+        &copy; Copyright 2026
+    </footer>
+</body>
+</html>

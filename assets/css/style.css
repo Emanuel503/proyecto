@@ -10,7 +10,7 @@
   --mar: #468189; /* Metallic Seaweed */
   --verde: #77aca2; /* Green Sheen */
   --opal: #9dbebb; /* Opal */
-  --arena: #f4e9cd; /* Champagne */
+  --arena: #FFFFFF;
 }
 
 .text-center {
@@ -156,6 +156,50 @@ body {
 
 .tecnologias ul li {
   font-weight: 400;
+}
+
+/* Formulario de contacto */
+.formulario {
+  max-width: 560px;
+  margin: 20px auto;
+}
+
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 15px;
+}
+
+.campo input,
+.campo select,
+.campo textarea {
+  padding: 8px 10px;
+  border: 1px solid var(--mar);
+  border-radius: 5px;
+  background: #fff;
+  color: var(--tinta);
+  font-family: inherit;
+  font-size: 14px;
+}
+
+.campo textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.opciones {
+  margin-bottom: 15px;
+  padding: 0;
+  border: none;
+}
+
+.opciones legend {
+  margin-bottom: 6px;
+}
+
+.opciones label {
+  margin-right: 15px;
 }
 
 /* Tabla de proyectos */
